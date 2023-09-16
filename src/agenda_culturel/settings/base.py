@@ -50,7 +50,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "project_name.urls"
+ROOT_URLCONF = "agenda_culturel.urls"
 
 TEMPLATES = [
     {
@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "project_name.wsgi.application"
+WSGI_APPLICATION = "agenda_culturel.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

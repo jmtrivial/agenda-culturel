@@ -34,12 +34,12 @@ This quickstart provides an easy way to initiate a Django project using Docker. 
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/godd0t/django-docker-quickstart.git
+    git clone https://github.com/jmtrivial/agenda-culturel.git
     ```
 
 2. **Change directory into the project:**
     ```bash
-    cd django-docker-quickstart
+    cd agenda-culturel
     ```
 
 3. **Copy the `env.example` file to `.env` and update the values as needed:**  
@@ -91,7 +91,7 @@ This quickstart provides an easy way to initiate a Django project using Docker. 
      make build-dev
      ```
 
-You can now access the application at http://localhost:8000. The development environment allows for immediate reflection of code changes.
+You can now access the application at http://localhost:8008. The development environment allows for immediate reflection of code changes.
 
 ### Production Setup
 
