@@ -1,10 +1,16 @@
-# Django Docker Quickstart
+# Agenda culturel
+
+L'agenda culturel est un projet django créé à partir de [Django Docker Quickstard](https://github.com/godd0t/django-docker-quickstart/) pour faciliter son développemnt et déploiement. Voir ci-dessous le readme issu de ce projet.
+
+
+
+## Django Docker Quickstart
 
 This quickstart provides an easy way to initiate a Django project using Docker. It comes with pre-configured services including PostgreSQL, Redis, Celery (worker and beat), Nginx, and Traefik, ready to run a Django web application. Additionally, it provides a few handy shortcuts for easier development.
 
 ---
 
-## Features 🚀
+### Features 🚀
 
 - **Django** web application framework
 - **PostgreSQL** database
@@ -13,7 +19,7 @@ This quickstart provides an easy way to initiate a Django project using Docker. 
 - **Nginx** web server for serving static and media files, and proxying requests to the Django application
 - **Traefik** reverse proxy for routing requests to the appropriate service and providing SSL termination
 
-## Included Packages and Tools 🛠️
+### Included Packages and Tools 🛠️
 
 - **Pytest**: Testing framework
 - **Pytest Sugar**: A pytest plugin for a better look
@@ -22,7 +28,7 @@ This quickstart provides an easy way to initiate a Django project using Docker. 
 - **Ruff**: Linter
 - **Black**: Code formatter
 
-## Requirements 📋
+### Requirements 📋
 
 - Docker & Docker Compose - [Install and Use Docker](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04)
 - Python 3.10 or higher
@@ -30,7 +36,7 @@ This quickstart provides an easy way to initiate a Django project using Docker. 
 
 ---
 
-## Getting Started 🏁
+### Getting Started 🏁
 
 1. **Clone the repository:**
     ```bash
@@ -55,9 +61,9 @@ This quickstart provides an easy way to initiate a Django project using Docker. 
 
 ---
 
-## Initial Setup ⚙️
+### Initial Setup ⚙️
 
-### Development Prerequisites
+#### Development Prerequisites
 
 1. **Create a virtual environment:**
     ```bash
@@ -93,7 +99,7 @@ This quickstart provides an easy way to initiate a Django project using Docker. 
 
 You can now access the application at http://localhost:8008. The development environment allows for immediate reflection of code changes.
 
-### Production Setup
+#### Production Setup
 
 1. **Build the image and run the container:**  
 
@@ -113,7 +119,7 @@ You can now access the application at http://localhost:8008. The development env
 
 ---
 
-## Shortcuts 🔑
+### Shortcuts 🔑
 
 This project includes several shortcuts to streamline the development process:
 
