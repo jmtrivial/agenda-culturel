@@ -3,7 +3,6 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
 from django.template.defaultfilters import slugify  # new
 from django.urls import reverse
-import uuid
 
 from django.template.defaultfilters import date as _date
 from datetime import datetime
@@ -16,8 +15,6 @@ class Event(models.Model):
         TRASH = "trash", _("Trash")
         DRAFT = "draft", _("Draft")
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    slug = models.SlugField(null=False, unique=True, editable=False)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
@@ -41,12 +38,7 @@ class Event(models.Model):
     reference_urls = ArrayField(models.URLField(max_length=200), verbose_name=_('URLs'), help_text=_("List of all the urls where this event can be found."), blank=True, null=True)
 
     def get_absolute_url(self):
-        return reverse("view_event", kwargs={"slug": self.slug})
-
-    def save(self, *args, **kwargs):  # new
-        if not self.slug:
-            self.slug = slugify(str(self.id) + "-" + self.title)
-        return super().save(*args, **kwargs)
+        return reverse("view_event", kwargs={"pk": self.pk, "extra": self.title})
 
     def __str__(self):
         return _date(self.start_day) + ": " + self.title
