@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 RUN --mount=type=cache,target=/var/cache/apt \
 	apt-get update && \
-    apt-get install --no-install-recommends -y build-essential libpq-dev \
+    apt-get install --no-install-recommends -y build-essential libpq-dev gettext \
     && rm -rf /var/lib/apt/lists/*
 
 

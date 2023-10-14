@@ -1,0 +1,134 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-14 15:29+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: agenda_culturel/models.py:15
+msgid "Published"
+msgstr "Publié"
+
+#: agenda_culturel/models.py:16
+msgid "Trash"
+msgstr "Corbeille"
+
+#: agenda_culturel/models.py:17
+msgid "Draft"
+msgstr "Brouillon"
+
+#: agenda_culturel/models.py:24
+msgid "Title"
+msgstr "Titre"
+
+#: agenda_culturel/models.py:24
+msgid "Short title"
+msgstr "Titre court"
+
+#: agenda_culturel/models.py:26
+msgid "Status"
+msgstr "Status"
+
+#: agenda_culturel/models.py:28
+msgid "Day of the event"
+msgstr "Date de l'événement"
+
+#: agenda_culturel/models.py:29
+msgid "Starting time"
+msgstr "Heure de début"
+
+#: agenda_culturel/models.py:31
+msgid "End day of the event"
+msgstr "Fin de l'événement"
+
+#: agenda_culturel/models.py:31
+msgid "End day of the event, only required if different from the start day."
+msgstr ""
+"Date de fin de l'événement, uniquement nécessaire s'il est différent du "
+"premier jour de l'événement"
+
+#: agenda_culturel/models.py:32
+msgid "Final time"
+msgstr "Heure de fin"
+
+#: agenda_culturel/models.py:34
+msgid "Location"
+msgstr "Localisation"
+
+#: agenda_culturel/models.py:34
+msgid "Address of the event"
+msgstr "Adresse de l'événement"
+
+#: agenda_culturel/models.py:36
+msgid "Description"
+msgstr "Description"
+
+#: agenda_culturel/models.py:36
+msgid "General description of the event"
+msgstr "Description générale de l'événement"
+
+#: agenda_culturel/models.py:38
+msgid "Illustration"
+msgstr "Illustration"
+
+#: agenda_culturel/models.py:38
+msgid "URL of the illustration image"
+msgstr "URL de l'image illustrative"
+
+#: agenda_culturel/models.py:39
+msgid "Illustration description"
+msgstr "Description de l'illustration"
+
+#: agenda_culturel/models.py:39
+msgid "Alternative text used by screen readers for the image"
+msgstr "Texte alternatif utiliser par les lecteurs d'écrans pour l'image"
+
+#: agenda_culturel/models.py:41
+msgid "URLs"
+msgstr "URLs"
+
+#: agenda_culturel/models.py:41
+msgid "List of all the urls where this event can be found."
+msgstr "Liste de toutes les urls où l'événement peut être trouvé."
+
+#: agenda_culturel/models.py:55
+msgid "Event"
+msgstr "Événement"
+
+#: agenda_culturel/models.py:56
+msgid "Events"
+msgstr "Événements"
+
+#: agenda_culturel/views.py:11
+msgid "this_week"
+msgstr "cette_semaine"
+
+#: agenda_culturel/views.py:12
+msgid "this_weekend"
+msgstr "ce_weekend"
+
+#: agenda_culturel/views.py:13
+msgid "next_week"
+msgstr "semaine_prochaine"
+
+#: agenda_culturel/views.py:14
+msgid "this_month"
+msgstr "ce_mois_ci"
+
+#: agenda_culturel/views.py:15
+#, fuzzy
+#| msgid "next_mont"
+msgid "next_month"
+msgstr "mois_prochain"
