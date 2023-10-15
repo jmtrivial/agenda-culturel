@@ -1,5 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, FormView
+
+from .forms import EventSubmissionModelForm
+from .celery import create_event_from_submission
+
 from .models import Event
 from django.utils import timezone
 from enum import StrEnum
@@ -34,3 +38,19 @@ class EventDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context["now"] = timezone.now()
         return context
+
+
+class EventSubmissionFormView(FormView):
+    form_class = EventSubmissionModelForm
+    template_name = "agenda_culturel/submission.html"
+    success_url = "/"
+
+    def form_valid(self, form):
+        form.save()
+        self.create_event(form.cleaned_data)
+
+        return super().form_valid(form)
+
+    def create_event(self, valid_data):
+        url = valid_data["url"]
+        create_event_from_submission.delay(url)

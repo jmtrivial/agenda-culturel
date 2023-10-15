@@ -2,12 +2,17 @@ import os
 
 from celery import Celery
 from celery.schedules import crontab
+from celery.utils.log import get_task_logger
+
 
 # Set the default Django settings module for the 'celery' program.
 APP_ENV = os.getenv("APP_ENV", "dev")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", f"agenda_culturel.settings.{APP_ENV}")
 
 app = Celery("agenda_culturel")
+
+logger = get_task_logger(__name__)
+
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
@@ -20,16 +25,15 @@ app.autodiscover_tasks()
 
 
 @app.task(bind=True)
-def debug_task(self):
-    print(f"Request: {self.request!r}")
+def create_event_from_submission(self, url):
+    logger.info(f"{url=}")
+    try:
+        logger.info("About to create event from submission")
+        # TODO
+    except BadHeaderError:
+        logger.info("BadHeaderError")
+    except Exception as e:
+        logger.error(e)
 
 
-app.conf.beat_schedule = {
-    "delete_job_files": {
-        "task": "test_periodic_task",
-        # Every 1 minute for testing purposes
-        "schedule": crontab(minute="*/1"),
-    },
-}
-
-app.conf.timezone = "UTC"
+app.conf.timezone = "Europe/Paris"

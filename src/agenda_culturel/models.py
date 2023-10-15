@@ -35,7 +35,7 @@ class Event(models.Model):
     image = models.URLField(verbose_name=_('Illustration'), help_text=_("URL of the illustration image"), max_length=200, blank=True, null=True)
     image_alt = models.CharField(verbose_name=_('Illustration description'), help_text=_('Alternative text used by screen readers for the image'), blank=True, null=True, max_length=512)
 
-    reference_urls = ArrayField(models.URLField(max_length=200), verbose_name=_('URLs'), help_text=_("List of all the urls where this event can be found."), blank=True, null=True)
+    reference_urls = ArrayField(models.URLField(max_length=512), verbose_name=_('URLs'), help_text=_("List of all the urls where this event can be found."), blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse("view_event", kwargs={"pk": self.pk, "extra": self.title})
@@ -46,3 +46,15 @@ class Event(models.Model):
     class Meta:
         verbose_name = _('Event')
         verbose_name_plural = _('Events')
+
+
+class EventSubmissionForm(models.Model):
+    url = models.URLField(max_length=512, verbose_name=_('URL'), help_text=_("URL where this event can be found."))
+
+    class Meta:
+        db_table = "eventsubmissionform"
+        verbose_name = _("Event submission form")
+        verbose_name_plural = _("Event submissions forms")
+
+    def __str__(self):
+        return self.url

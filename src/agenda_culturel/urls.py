@@ -11,8 +11,10 @@ urlpatterns = [
     path("", EventListView.as_view(), name="home"),
     re_path(r'^(?P<mode>' + '|'.join([dm.value for dm in DisplayModes]) + ')/$', view_interval, name='view_interval'),
     path("event/<pk>-<extra>", EventDetailView.as_view(), name="view_event"),
+    path("proposer", EventSubmissionFormView.as_view(), name="event_submission_form"),
     path("admin/", admin.site.urls),
     path("test_app/", include("test_app.urls")),
+
 ]
 
 if settings.DEBUG:
