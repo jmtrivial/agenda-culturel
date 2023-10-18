@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-#from .models import Event
+
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -8,6 +8,8 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 
 import json
+from datetime import datetime
+
 
 
 from celery.utils.log import get_task_logger
@@ -67,21 +69,27 @@ class ExtractorFacebook(Extractor):
                             return v
             return None
 
-    def extract(url):
-        txt = Extractor.download(url)
-        if txt is None:
-            logger.error("Cannot download " + url)
-            return None
-        else:
-            soup = BeautifulSoup(txt, "html.parser")
-            for json_script in soup.find_all('script', type="application/json"):
-                json_txt = json_script.get_text()
-                json_struct = json.loads(json_txt)
-                fevent = ExtractorFacebook.FacebookEvent.find_event_in_array(json_struct)
-                if fevent != None:
-                    logger.info(str(fevent))
-                    result = "TODO"
-                    return result
+
+        def build_event(self, url):
+            from .models import Event
+            # TODO
+            return Event(title=self.data["name"], 
+                        status=Event.STATUS.DRAFT,
+                        start_day=datetime.fromtimestamp(self.data["start_timestamp"]),
+                        reference_urls=[url])
+
+    def process_page(txt, url):
+
+        soup = BeautifulSoup(txt, "html.parser")
+        for json_script in soup.find_all('script', type="application/json"):
+            json_txt = json_script.get_text()
+            json_struct = json.loads(json_txt)
+            fevent = ExtractorFacebook.FacebookEvent.find_event_in_array(json_struct)
+            if fevent != None:
+                logger.info(str(fevent.data))
+
+                result = fevent.build_event(url)
+                return [result]
         
         return None
 
@@ -92,11 +100,18 @@ class ExtractorAllURLs:
     def extract(url):
         logger.info("Run extraction")
 
-        result = ExtractorFacebook.extract(url)
+        txt = Extractor.download(url)
+        if txt is None:
+            logger.info("Cannot download url")
+            return None
 
-        if result is None:
+        result = ExtractorFacebook.process_page(txt, url)
+
+        if result is not None:
+            return result
+        else:
             logger.info("Not a Facebook link")
-            # add here other extrators
-            pass
 
-        return result
+        # TODO: add here other extrators
+
+        return None

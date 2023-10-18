@@ -6,6 +6,7 @@ from celery.utils.log import get_task_logger
 
 from .extractors import ExtractorAllURLs 
 
+
 # Set the default Django settings module for the 'celery' program.
 APP_ENV = os.getenv("APP_ENV", "dev")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", f"agenda_culturel.settings.{APP_ENV}")
@@ -27,15 +28,25 @@ app.autodiscover_tasks()
 
 @app.task(bind=True)
 def create_event_from_submission(self, url):
+    from agenda_culturel.models import Event
+
     logger.info(f"{url=}")
-    try:
-        logger.info("About to create event from submission")
-        events = ExtractorAllURLs.extract(url)
-        # TODO
-    except BadHeaderError:
-        logger.info("BadHeaderError")
-    except Exception as e:
-        logger.error(e)
+
+    if len(Event.objects.filter(reference_urls__contains=[url])) != 0:
+        logger.info("Already known url: ", url)
+    else:
+        try:
+            logger.info("About to create event from submission")
+            events = ExtractorAllURLs.extract(url)
+
+            if events != None:
+                for e in events:
+                    e.save()
+
+        except BadHeaderError:
+            logger.info("BadHeaderError")
+        except Exception as e:
+            logger.error(e)
 
 
 app.conf.timezone = "Europe/Paris"

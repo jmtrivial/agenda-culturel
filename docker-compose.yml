@@ -45,6 +45,7 @@ services:
     volumes:
         - redis_data:/data
 
+
   celery-worker: &celery-worker
     container_name: "${APP_NAME}-celery-worker"
     build:
