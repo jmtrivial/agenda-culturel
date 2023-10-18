@@ -1,15 +1,12 @@
-<!doctype html>
-<html lang="fr">
-    <head>
-        <meta charset="utf-8">
-        <title>Proposer un événement</title>
-    </head>
-    <body>
-        <h2>Formulaire de proposition d'événement</h2>
+{% extends "agenda_culturel/page.html" %}
+
+{% block title %}Proposer un événement{% endblock %}
+
+{% block content %}
+<h1>Formulaire de proposition d'événement</h1>
         <form method="post" action="">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Proposer un événement">
         </form>
-    </body>
-</html>
+{% endblock %}

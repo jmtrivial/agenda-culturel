@@ -1,1 +1,14 @@
-ça marche
+{% extends "agenda_culturel/page.html" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<h1>Événements</h1>
+<ul>
+{% for event in object_list %}
+    <li><a href="{{ BASE_URL }}{{ event.get_absolute_url }}">{{ event.start_day|date }} : {{ event.title }}</a></li>
+{% empty %}
+    <li>Il n'y a pas d'événement.</li>
+{% endfor %}
+</ul>
+{% endblock %}

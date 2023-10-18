@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>{% block title %}{% endblock %}</title>
+    
+    {% load static %}
+    {% if debug %}
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon-dev.svg' %}">
+    {% else %}
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block entete_header %}
+    {% endblock %}
+</head>
+<body>
+    <div id="full_content" class="{% block classe_principale %}{% endblock %}">
+    {% block content %}{% endblock %}
+    </div>
+</body>
