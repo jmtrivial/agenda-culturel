@@ -4,6 +4,7 @@ from celery import Celery
 from celery.schedules import crontab
 from celery.utils.log import get_task_logger
 
+from .extractors import ExtractorAllURLs 
 
 # Set the default Django settings module for the 'celery' program.
 APP_ENV = os.getenv("APP_ENV", "dev")
@@ -29,6 +30,7 @@ def create_event_from_submission(self, url):
     logger.info(f"{url=}")
     try:
         logger.info("About to create event from submission")
+        events = ExtractorAllURLs.extract(url)
         # TODO
     except BadHeaderError:
         logger.info("BadHeaderError")

@@ -20,3 +20,5 @@ vine==5.0.0
 wcwidth==0.2.6
 redis==4.5.5
 whitenoise==6.4.0
+selenium==4.14.0
+BeautifulSoup4==4.12.2
