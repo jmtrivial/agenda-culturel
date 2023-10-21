@@ -3,10 +3,51 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
 from django.template.defaultfilters import slugify  # new
 from django.urls import reverse
+from colorfield.fields import ColorField
 
 from django.template.defaultfilters import date as _date
 from datetime import datetime
 
+
+class Category(models.Model):
+
+    COLOR_PALETTE = [
+        ("#ea5545", "color 1"),
+        ("#f46a9b", "color 2"),
+        ("#ef9b20", "color 3"),
+        ("#edbf33", "color 4"),
+        ("#ede15b", "color 5"),
+        ("#bdcf32", "color 6"),
+        ("#87bc45", "color 7"),
+        ("#27aeef", "color 8"),
+        ("#b33dc6", "color 9")]
+
+    name = models.CharField(verbose_name=_('Name'), help_text=_('Category name'), max_length=512)
+    codename = models.CharField(verbose_name=_('Short name'), help_text=_('Short name of the category'), max_length=3)
+    color = ColorField(verbose_name=_('Color'), help_text=_('Color used as background for the category'), blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.color is None:
+            existing_colors = [c.color for c in Category.objects.all()]
+            if len(existing_colors) > len(Category.COLOR_PALETTE):
+                self.color = "#CCCCCC"
+            else:
+                for c, n in Category.COLOR_PALETTE:
+                    if c not in existing_colors:
+                        self.color = c
+                        break
+            if self.color is None:
+                self.color = "#CCCCCC"
+
+        super(Category, self).save(*args, **kwargs)
+
+
+    def __str__(self):
+        return self.name + " (" + self.codename + ")"
+
+    class Meta:
+        verbose_name = _('Category')
+        verbose_name_plural = _('Categories')
 
 class Event(models.Model):
 

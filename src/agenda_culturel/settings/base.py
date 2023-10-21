@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "agenda_culturel",
+    "colorfield",
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

@@ -16,7 +16,19 @@
     {% endblock %}
 </head>
 <body>
-    <div id="full_content" class="{% block classe_principale %}{% endblock %}">
-    {% block content %}{% endblock %}
+    <div id="full_content" class="{% block main_class %}{% endblock %}">
+        <header>
+
+        </header>
+        <aside>
+            <!-- -->
+        </aside>
+        <section>
+            {% block content %}{% endblock %}
+        </section>
+        <footer>
+
+        </footer>
+        
     </div>
 </body>

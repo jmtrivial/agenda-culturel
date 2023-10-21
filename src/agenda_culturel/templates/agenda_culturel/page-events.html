@@ -1,0 +1,24 @@
+{% extends "agenda_culturel/page.html" %}
+
+ {% block content %}
+    <header>
+        <div id="display-mode">
+            TODO
+        </div>
+        <div id="categories">
+            {% for cat in categories %}
+                {% if category == cat %}
+                <span style="background: {{ cat.color }}">{{ cat }}</span>
+                {% else %}
+                    <a href="{% url 'view_mode_cat' selected_mode cat.pk %}" style="background: {{ cat.color }}">{{ cat }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </header>
+    <section>
+        {% block events %}{% endblock %}
+    </section>
+    <footer id="tags">
+        TODO
+    </footer>    
+ {% endblock %}
