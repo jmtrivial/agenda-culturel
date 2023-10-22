@@ -23,7 +23,7 @@ def home(request):
     # TODO: si on est au début de la semaine, on affiche la semaine en entier
     # sinon, on affiche le week-end
     # sauf si on est dimanche après 23h, on affiche la semaine prochaine
-    return view_mode(request, DisplayMode.this_week)
+    return view_mode(request, DisplayMode.this_week.name)
 
 
 def view_mode(request, mode):

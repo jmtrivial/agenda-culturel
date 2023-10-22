@@ -41,6 +41,9 @@ class Category(models.Model):
 
         super(Category, self).save(*args, **kwargs)
 
+    def css_class(self):
+        return "cat-" + str(self.id)
+
 
     def __str__(self):
         return self.name + " (" + self.codename + ")"
