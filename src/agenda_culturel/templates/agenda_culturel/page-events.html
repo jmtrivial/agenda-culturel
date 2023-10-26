@@ -8,13 +8,23 @@
 
  {% block content %}
     <header>
-        <div id="display-mode">
-            TODO
+        <div id="display-mode" class="nav-buttons">
+            {% for mode in modes %}
+                {% if selected_mode == mode.name %}
+                <span class="mode selected">{{ mode }}</span>
+                {% else %}
+                    {% if category %}
+                        <a href="{% url 'view_mode_cat' mode.name category.pk %}" class="mode">{{ mode }}</a>
+                    {% else %}
+                    <a href="{% url 'view_mode' mode.name %}" class="mode">{{ mode }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
         </div>
-        <div id="categories">
+        <div id="categories" class="nav-buttons">
             {% for cat in categories %}
                 {% if category == cat %}
-                <span class="cat {{ cat.css_class }}">{{ cat }}</span>
+                <span class="cat {{ cat.css_class }} selected">{{ cat }}</span>
                 {% else %}
                     <a href="{% url 'view_mode_cat' selected_mode cat.pk %}" class="cat {{ cat.css_class }}">{{ cat }}</a>
                 {% endif %}
