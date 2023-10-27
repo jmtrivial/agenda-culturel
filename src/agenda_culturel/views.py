@@ -7,6 +7,7 @@ from .celery import create_event_from_submission
 from .models import Event, Category
 from django.utils import timezone
 from enum import StrEnum
+from datetime import datetime, timedelta
 
 from django.utils.translation import gettext as _
 
@@ -15,8 +16,33 @@ class DisplayMode(StrEnum):
     this_week = _("this week")
     this_weekend = _("this weekend")
     next_week = _("next week")
+    next_weekend = _("next weekend")
     this_month = _("this month")
     next_month = _("next month")
+
+
+    def get_dates(self):
+        now = datetime.now()
+        if self in [DisplayMode.this_week, DisplayMode.next_week]:
+            day = now.weekday() # 0: Monday, 6: Sunday
+            start = now + timedelta(days=-day)
+            if self == DisplayMode.next_week:
+                start += timedelta(days=7)
+            return [start + timedelta(days=x) for x in range(0, 7)]
+        elif self in [DisplayMode.this_weekend, DisplayMode.next_weekend]:
+            day = now.weekday() # 0: Monday, 6: Sunday
+            start = now + timedelta(days=-day + 5)
+            if self == DisplayMode.next_week:
+                start += timedelta(days=7)
+            return [start + timedelta(days=x) for x in range(0, 2)]
+        elif self in [DisplayMode.this_month, DisplayMode.next_month]:
+            start = now.replace(day=1)
+            if self == DisplayMode.next_month:
+                start = (start.replace(day=1) + timedelta(days=32)).replace(day=1)
+            next_month = start.replace(day=28) + timedelta(days=4)
+            end = next_month - timedelta(days=next_month.day)
+            delta = end - start
+            return [start + timedelta(days=x) for x in range(0, delta.days + 1)]
 
 
 def home(request):
@@ -28,7 +54,8 @@ def home(request):
 
 def view_mode(request, mode):
     categories = Category.objects.all()
-    context = {"modes": list(DisplayMode), "selected_mode": mode, "categories": categories}
+    dates = DisplayMode[mode].get_dates()
+    context = {"modes": list(DisplayMode), "selected_mode": mode, "categories": categories }
     # TODO: select matching events
     return render(request, 'agenda_culturel/page-events.html', context)
 
