@@ -68,11 +68,15 @@ def css_categories():
         result += "}"
 
         result += "a." + c.css_class() + ":hover {"
-        result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.1, 1.2))
+        result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.2, 1.2))
         result += "}"
 
         result += "." + c.css_class() + ".selected {"
         result += background_color_adjust_color(c.color)
+        result += "}"
+
+        result += "span." + c.css_class() + ".selected:hover {"
+        result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.02, 1.0))
         result += "}"
 
 

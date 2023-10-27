@@ -19,7 +19,7 @@ body {
     color: #000;
 }
 
-.cat.selected, .mode.selected {
+span.cat, span.mode {
     cursor: default;
 }
 
@@ -35,4 +35,22 @@ a.mode:hover {
 .mode.selected {
     background-color: #444;
     color: #fff;
+}
+
+.cat a.close {
+    text-decoration: none;
+    height: 1.6em;
+    width: 1.6em;
+    display: inline-block;
+    line-height: 1.6em;
+    background: #eee;
+    color: #000;
+    border-radius: 0.8em;
+    text-align: center;
+    font-weight: bold;
+    margin-left: 0.4em;
+    margin-right: -0.8em;
+}
+.cat a.close:hover {
+    background: #fff;
 }
