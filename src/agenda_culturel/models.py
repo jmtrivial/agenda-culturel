@@ -66,6 +66,8 @@ class Event(models.Model):
 
     status = models.CharField(_("Status"), max_length=20, choices=STATUS.choices, default=STATUS.PUBLISHED)
 
+    category = models.ForeignKey(Category, verbose_name=_('Category'), help_text=_('Category of the event'), null=True, on_delete=models.SET_NULL)
+
     start_day = models.DateField(verbose_name=_('Day of the event'), help_text=_('Day of the event'))
     start_time = models.TimeField(verbose_name=_('Starting time'), help_text=_('Starting time'), blank=True, null=True)
 
@@ -80,6 +82,8 @@ class Event(models.Model):
     image_alt = models.CharField(verbose_name=_('Illustration description'), help_text=_('Alternative text used by screen readers for the image'), blank=True, null=True, max_length=512)
 
     reference_urls = ArrayField(models.URLField(max_length=512), verbose_name=_('URLs'), help_text=_("List of all the urls where this event can be found."), blank=True, null=True)
+
+    tags = ArrayField(models.CharField(max_length=64), verbose_name=_('Tags'), help_text=_("A list of tags that describe the event."), blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse("view_event", kwargs={"pk": self.pk, "extra": self.title})
