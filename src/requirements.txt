@@ -26,3 +26,4 @@ watchdog==3.0.0
 django-colorfield==0.10.1
 cffi==1.16.0
 django-extensions==3.2.3
+djipsum==1.1.5
