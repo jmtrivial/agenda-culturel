@@ -4,6 +4,10 @@ import random
 from datetime import datetime, timedelta
 
 def run():
+
+    tags = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    tags = [w for w in tags.replace(",", "").replace(".", "").split() if len(w) >= 3]
+
     faker = FakerModel(app='agenda_culturel', model='Event')
 
     def random_hour():
@@ -27,16 +31,14 @@ def run():
             'image': faker.fake.url(),
             'image_alt': faker.fake.text(max_nb_chars=100),
             'reference_urls': [faker.fake.url() for i in range(0, random.randint(0, 5))],
-            'tags': [faker.fake.text(max_nb_chars=32) for i in range(0, random.randint(0, 10))]
+            'tags': [tags[random.randint(0, len(tags) - 1)] for i in range(0, random.randint(0, 10))]
 
         }
         if random.randint(0, 1) == 1:
             fields["end_day"] = (sday + timedelta(days=random.randint(0, 6))).date()
         if random.randint(0, 1) == 1:
             fields["start_time"] = random_hour()
-            print(fields["start_time"])
         if random.randint(0, 1) == 1:
             fields["end_time"] = random_hour()
-            print(fields["end_time"])
         faker.create(fields)
 
