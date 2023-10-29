@@ -1,5 +1,9 @@
 {% extends "agenda_culturel/page.html" %}
 
+
+
+{% load i18n %}
+
 {% load cat_extra %}
 
 {% block entete_header %}
@@ -10,7 +14,7 @@
     <header>
         <div id="display-mode" class="nav-buttons">
             {% for mode in modes %}
-                {% if selected_mode == mode.name %}
+                {% if selected_mode.name == mode.name %}
                 <span class="mode selected">{{ mode }}</span>
                 {% else %}
                     {% if category %}
@@ -24,15 +28,17 @@
         <div id="categories" class="nav-buttons">
             {% for cat in categories %}
                 {% if category == cat %}
-                <span class="cat {{ cat.css_class }} selected">{{ cat }} <a href="{% url 'view_mode' selected_mode %}" class="close">✕</a></span>
+                <span class="cat {{ cat.css_class }} selected">{{ cat }} <a href="{% url 'view_mode' selected_mode.name %}" class="close">✕</a></span>
                 {% else %}
-                    <a href="{% url 'view_mode_cat' selected_mode cat.pk %}" class="cat {{ cat.css_class }} {% if category == None %}selected{% endif %}">{{ cat }}</a>
+                    <a href="{% url 'view_mode_cat' selected_mode.name cat.pk %}" class="cat {{ cat.css_class }} {% if category == None %}selected{% endif %}">{{ cat }}</a>
                 {% endif %}
             {% endfor %}
         </div>
     </header>
     <section>
-        {% block events %}{% endblock %}
+        {% block events %}
+        <h2>{{ selected_mode | capfirst  }}</h2>
+        {% endblock %}
     </section>
     <footer id="tags">
         TODO 

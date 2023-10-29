@@ -9,17 +9,19 @@ from django.utils import timezone
 from enum import StrEnum
 from datetime import datetime, timedelta
 
-from django.utils.translation import gettext as _
-
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import activate, get_language_info
 
 class DisplayMode(StrEnum):
-    this_week = _("this week")
-    this_weekend = _("this weekend")
-    next_week = _("next week")
-    next_weekend = _("next weekend")
-    this_month = _("this month")
-    next_month = _("next month")
+    this_week = "this week"
+    this_weekend = "this weekend"
+    next_week = "next week"
+    next_weekend = "next weekend"
+    this_month = "this month"
+    next_month = "next month"
 
+    def i18n_value(self):
+        return _(self.value)
 
     def get_dates(self):
         now = datetime.now()
@@ -44,6 +46,9 @@ class DisplayMode(StrEnum):
             delta = end - start
             return [start + timedelta(days=x) for x in range(0, delta.days + 1)]
 
+    def __str__(self):
+        return str(self.i18n_value())
+
 
 def home(request):
     # TODO: si on est au début de la semaine, on affiche la semaine en entier
@@ -55,7 +60,8 @@ def home(request):
 def view_mode(request, mode):
     categories = Category.objects.all()
     dates = DisplayMode[mode].get_dates()
-    context = {"modes": list(DisplayMode), "selected_mode": mode, "categories": categories }
+    activate("fr")
+    context = {"modes": list(DisplayMode), "selected_mode": DisplayMode[mode], "categories": categories }
     # TODO: select matching events
     return render(request, 'agenda_culturel/page-events.html', context)
 

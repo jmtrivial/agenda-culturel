@@ -1,5 +1,6 @@
 from os import getenv as os_getenv, path as os_path  # noqa
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 from django.core.management.utils import get_random_secret_key
 
@@ -45,6 +46,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'django.middleware.locale.LocaleMiddleware',
     "corsheaders.middleware.CorsMiddleware",  # CorsMiddleware should be placed as high as possible,
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -108,13 +110,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "fr-fr"
+LANGUAGE_CODE = "fr"
 
 TIME_ZONE = "Europe/Paris"
 
 USE_I18N = True
 
 USE_TZ = True
+
+LANGUAGES = (
+    ('en-us', _('English')),
+    ('fr', _('French')),
+)
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
