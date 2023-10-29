@@ -7,12 +7,12 @@ from django.urls import path, include, re_path
 
 from .views import *
 
-modes = '|'.join([dm.name for dm in DisplayMode]) + ")"
+modes = '|'.join([dm.name for dm in DisplayMode])
 
 urlpatterns = [
     path("", home, name="home"),
-    re_path(r'^(?P<mode>' + modes + '/$', view_mode, name='view_mode'),
-    re_path(r'^(?P<mode>' + modes + '/(?P<cat_id>\d+)/$', view_mode_cat, name='view_mode_cat'),
+    re_path(r'^(?P<mode>' + modes + ')/$', view_mode, name='view_mode'),
+    re_path(r'^(?P<mode>' + modes + ')/(?P<cat_id>\d+)/$', view_mode_cat, name='view_mode_cat'),
     path("event/<int:pk>-<extra>", EventDetailView.as_view(), name="view_event"),
     path("proposer", EventSubmissionFormView.as_view(), name="event_submission_form"),
     path("admin/", admin.site.urls),

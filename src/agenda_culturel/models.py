@@ -23,6 +23,7 @@ class Category(models.Model):
         ("#b33dc6", "color 9")]
 
     name = models.CharField(verbose_name=_('Name'), help_text=_('Category name'), max_length=512)
+    alt_name = models.CharField(verbose_name=_('Alternative Name'), help_text=_('Alternative name used with a time period'), max_length=512)
     codename = models.CharField(verbose_name=_('Short name'), help_text=_('Short name of the category'), max_length=3)
     color = ColorField(verbose_name=_('Color'), help_text=_('Color used as background for the category'), blank=True, null=True)
 

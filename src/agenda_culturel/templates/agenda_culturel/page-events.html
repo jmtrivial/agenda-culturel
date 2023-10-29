@@ -37,7 +37,12 @@
     </header>
     <section>
         {% block events %}
-        <h2>{{ selected_mode | capfirst  }}</h2>
+        <h2> {% if category %}
+            {{ category.alt_name | capfirst }}
+            {{ selected_mode }}
+            {% else %}
+            {{ selected_mode | capfirst  }}
+            {% endif %}</h2>
         {% endblock %}
     </section>
     <footer id="tags">

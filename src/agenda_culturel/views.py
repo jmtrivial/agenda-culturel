@@ -70,7 +70,7 @@ def view_mode_cat(request, mode, cat_id):
     category = get_object_or_404(Category, pk=cat_id)
     categories = Category.objects.all()
     # TODO: select matching events
-    context = {"modes": list(DisplayMode), "selected_mode": mode, "category": category, "categories": categories}
+    context = {"modes": list(DisplayMode), "selected_mode": DisplayMode[mode], "category": category, "categories": categories}
     return render(request, 'agenda_culturel/page-events.html', context)
 
 
