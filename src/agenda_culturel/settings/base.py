@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "agenda_culturel",
     "colorfield",
     'django_extensions',
+    'django_better_admin_arrayfield',
 ]
 
 MIDDLEWARE = [

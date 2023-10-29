@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
+from django_better_admin_arrayfield.models.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
 from django.template.defaultfilters import slugify  # new
 from django.urls import reverse
