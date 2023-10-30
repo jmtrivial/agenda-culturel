@@ -82,3 +82,10 @@ def css_categories():
 
     result += '</style>'
     return mark_safe(result)
+
+@register.filter
+def small_cat(category, url=None):
+    if url is None:
+        return mark_safe('<span class="small-cat selected ' + category.css_class() + '">' + category.name + "</span>")
+    else:
+        return mark_safe('<a class="small-cat selected ' + category.css_class() + '" href="' + url + '">' + category.name + "</a>")

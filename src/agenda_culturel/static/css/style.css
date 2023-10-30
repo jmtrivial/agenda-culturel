@@ -34,7 +34,7 @@ span.cat, span.mode {
 }
 
 .mode {
-    background-color: #999;
+    background-color: #CCC;
 }
 
 a.mode:hover {
@@ -63,4 +63,23 @@ a.mode:hover {
 }
 .cat a.close:hover {
     background: #fff;
+}
+
+.small-cat {
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 80%;
+    display: inline-block;
+    padding: 0.1em 0.8em;
+    border-radius: .4em;
+}
+
+.warning-simple {
+    font-style: italic;
+}
+
+.warning {
+    background: #EEE;
+    padding: 1em;
+    border-radius: 1.5em;
 }

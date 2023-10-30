@@ -8,6 +8,7 @@ from .models import Event, Category
 from django.utils import timezone
 from enum import StrEnum
 from datetime import datetime, timedelta
+from django.db.models import Q
 
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import activate, get_language_info
@@ -60,17 +61,17 @@ def home(request):
 def view_mode(request, mode):
     categories = Category.objects.all()
     dates = DisplayMode[mode].get_dates()
-    activate("fr")
-    context = {"modes": list(DisplayMode), "selected_mode": DisplayMode[mode], "categories": categories }
-    # TODO: select matching events
+    events = Event.objects.filter(Q(start_day__lte=dates[-1]) & Q(start_day__gte=dates[0])).order_by("start_day", "start_time")
+    context = {"modes": list(DisplayMode), "selected_mode": DisplayMode[mode], "categories": categories, "events": events, "dates": dates}
     return render(request, 'agenda_culturel/page-events.html', context)
 
 
 def view_mode_cat(request, mode, cat_id):
     category = get_object_or_404(Category, pk=cat_id)
     categories = Category.objects.all()
-    # TODO: select matching events
-    context = {"modes": list(DisplayMode), "selected_mode": DisplayMode[mode], "category": category, "categories": categories}
+    dates = DisplayMode[mode].get_dates()
+    events = Event.objects.filter(start_day__lte=dates[-1], start_day__gte=dates[0], category=category).order_by("start_day", "start_time")
+    context = {"modes": list(DisplayMode), "selected_mode": DisplayMode[mode], "category": category, "categories": categories, "events": events, "dates": dates}
     return render(request, 'agenda_culturel/page-events.html', context)
 
 
