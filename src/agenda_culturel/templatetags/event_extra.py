@@ -9,3 +9,7 @@ register = template.Library()
 @register.filter
 def in_date(event, date):
     return event.filter((Q(start_day__lte=date) & Q(end_day__gte=date)) | (Q(end_day=None) & Q(start_day=date)))
+
+@register.simple_tag
+def nb_draft_events():
+    return Event.objects.filter(status=Event.STATUS.DRAFT).count()

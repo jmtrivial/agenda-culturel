@@ -12,6 +12,11 @@ from django.db.models import Q
 
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import activate, get_language_info
+import django_filters
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
+
+
 
 class DisplayMode(StrEnum):
     this_week = "this week"
@@ -75,7 +80,6 @@ def view_mode_cat(request, mode, cat_id):
     return render(request, 'agenda_culturel/page-events.html', context)
 
 
-
 class EventDetailView(DetailView):
     model = Event
     template_name = "agenda_culturel/event.html"
@@ -100,3 +104,40 @@ class EventSubmissionFormView(FormView):
     def create_event(self, valid_data):
         url = valid_data["url"]
         create_event_from_submission.delay(url)
+
+
+
+class EventFilter(django_filters.FilterSet):
+    tags = django_filters.CharFilter(lookup_expr='icontains')
+
+
+    o = django_filters.OrderingFilter(
+        # tuple-mapping retains order
+        fields=(
+            ('created_date', 'created_date'),
+            ('modified_date', 'modified_date'),
+            ('status', 'status'),
+            ('title', 'title'),
+            ('start_day', 'start_day'),
+        ),
+    )
+
+
+    class Meta:
+        model = Event
+        fields = ['title', 'status', 'category', 'tags']
+
+@login_required(login_url="/accounts/login/")
+def event_list(request):
+    filter = EventFilter(request.GET, queryset=Event.objects.all())
+    paginator = Paginator(filter.qs, 10)
+    page = request.GET.get('page')
+
+    try:
+        response = paginator.page(page)
+    except PageNotAnInteger:
+        response = paginator.page(1)
+    except EmptyPage:
+        response = paginator.page(paginator.num_pages)
+
+    return render(request, 'agenda_culturel/list.html', {'filter': filter, 'paginator_filter': response})

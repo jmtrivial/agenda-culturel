@@ -19,9 +19,9 @@
                 <span class="mode selected">{{ mode }}</span>
                 {% else %}
                     {% if category %}
-                        <a href="{% url 'view_mode_cat' mode.name category.pk %}" class="mode">{{ mode }}</a>
+                        <a href="{% url 'view_mode_cat' mode.name category.pk %}" class="mode button">{{ mode }}</a>
                     {% else %}
-                    <a href="{% url 'view_mode' mode.name %}" class="mode">{{ mode }}</a>
+                    <a href="{% url 'view_mode' mode.name %}" class="mode button">{{ mode }}</a>
                     {% endif %}
                 {% endif %}
             {% endfor %}
@@ -29,9 +29,9 @@
         <div id="categories" class="nav-buttons">
             {% for cat in categories %}
                 {% if category == cat %}
-                <span class="cat {{ cat.css_class }} selected">{{ cat }} <a href="{% url 'view_mode' selected_mode.name %}" class="close">✕</a></span>
+                <span class="cat {{ cat.css_class }} selected button">{{ cat }} <a href="{% url 'view_mode' selected_mode.name %}" class="close">✕</a></span>
                 {% else %}
-                    <a href="{% url 'view_mode_cat' selected_mode.name cat.pk %}" class="cat {{ cat.css_class }} {% if category == None %}selected{% endif %}">{{ cat }}</a>
+                    <a href="{% url 'view_mode_cat' selected_mode.name cat.pk %}" class="cat {{ cat.css_class }} {% if category == None %}selected{% endif %} button">{{ cat }}</a>
                 {% endif %}
             {% endfor %}
         </div>
@@ -48,9 +48,9 @@
             {% if events %}
                 {% for date in dates %}
                     
-                <h3>{{ date |date:"DATE_FORMAT" }}</h3>
                 {% with events_date=events|in_date:date %}
                 {% if events_date %}
+                <h3>{{ date |date:"l j F"| capfirst }}</h3>
                 <lu>
                     {% for event in events_date %}
                         <li>{% if category %}
@@ -58,12 +58,10 @@
                             {% else %}
                             {% url 'view_mode_cat' selected_mode.name event.category.pk as url_cat %}
                             {{ event.category | small_cat:url_cat }}
-                            {% endif %} {{ event.title }}
+                            {% endif %} <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
                         </li>
                     {% endfor %}
                 </lu>
-                {% else %}
-                <p class="warning-simple">Aucun événement ce jour-là.</p>
                 {% endif %}
                 {% endwith %}
                 {% endfor %}

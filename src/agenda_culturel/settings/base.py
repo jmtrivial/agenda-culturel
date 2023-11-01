@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "colorfield",
     'django_extensions',
     'django_better_admin_arrayfield',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -123,6 +124,10 @@ LANGUAGES = (
     ('fr', _('French')),
 )
 
+
+# Auth
+
+LOGIN_REDIRECT_URL = "/"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

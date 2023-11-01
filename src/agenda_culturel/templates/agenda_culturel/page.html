@@ -18,17 +18,35 @@
     {% block entete_header %}
     {% endblock %}
 </head>
+{% load event_extra %}
 <body>
     <div id="full_content" class="{% block main_class %}{% endblock %}">
         <header>
-            <h1>Les nuits énigmagmatiques</h1>
+            <h1><a href="{% url 'home' %}">Les nuits énigmagmatiques</a></h1>
             <div role="doc-subtitle">Agenda culturel de Clermont-Ferrand et des environs</div>
+            <div class="buttons">
+            {% if user.is_authenticated %}
+            <a href="{% url 'view_all_events' %}" id="edit_content_header" class="button rich_button">gérer les événements <span class="button">{% nb_draft_events %}</span></a>
+            {% endif %}
+            {% block add_content %}
+            <a href="{% url 'event_submission_form' %}" id="add_content_header" class="button rich_button">ajouter un événement <span class="button">+</span></a>
+            {% endblock %}
+            </div>
         </header>
         <section>
             {% block content %}{% endblock %}
         </section>
         <footer>
-
+            <ul>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'admin:index' %}">administration</a></li>
+                <li><a href="{% url 'logout' %}?next={% url 'home' %}">déconnexion</a></li>
+                <li>vous êtes connecté(e) en tant que {{ user }}</li>
+                {% else %}
+                <li><a href="{% url 'login' %}?next={% url 'view_all_events' %}">connexion</a></li>
+                  {% endif %}
+            </ul>
+        
         </footer>
         
     </div>

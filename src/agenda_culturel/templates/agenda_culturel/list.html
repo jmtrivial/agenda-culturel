@@ -1,14 +1,38 @@
 {% extends "agenda_culturel/page.html" %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Tous les événements{% endblock %}
 
 {% block content %}
-<h1>Événements</h1>
-<ul>
-{% for event in object_list %}
-    <li><a href="{{ BASE_URL }}{{ event.get_absolute_url }}">{{ event.start_day|date }} : {{ event.title }}</a></li>
-{% empty %}
-    <li>Il n'y a pas d'événement.</li>
+<h1>Derniers événements soumis</h1>
+
+<section>
+    <form method="get" class="form django-form">
+                    {% csrf_token %}<br />
+                    {{ filter.form }}<br />
+                    <button type="submit">Filtrer</button><br />
+    </form>
+</section>
+
+{% for obj in paginator_filter %}
+    {{ obj.title }} <br />
 {% endfor %}
-</ul>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if paginator_filter.has_previous %}
+            <a href="?page=1">&laquo; premier</a>
+            <a href="?page={{ paginator_filter.previous_page_number }}">précédent</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ paginator_filter.number }} sur {{ paginator_filter.paginator.num_pages }}
+        </span>
+
+        {% if paginator_filter.has_next %}
+            <a href="?page={{ paginator_filter.next_page_number }}">suivant</a>
+            <a href="?page={{ paginator_filter.paginator.num_pages }}">dernier &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
 {% endblock %}
