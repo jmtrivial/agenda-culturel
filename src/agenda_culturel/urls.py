@@ -16,7 +16,6 @@ urlpatterns = [
     path("events/", event_list, name='view_all_events'),
     path("event/<int:pk>-<extra>", EventDetailView.as_view(), name="view_event"),
     path("proposer", EventSubmissionFormView.as_view(), name="event_submission_form"),
-    path("a-propos", , name="about"),
     path("admin/", admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path("test_app/", include("test_app.urls")),
