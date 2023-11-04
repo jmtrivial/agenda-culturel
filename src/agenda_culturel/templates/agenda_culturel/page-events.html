@@ -11,6 +11,15 @@
     {% css_categories %}
 {% endblock %}
 
+{% block title %}
+{% if category %}
+            {{ category.alt_name | capfirst }}
+            {{ selected_mode }}
+            {% else %}
+            {{ selected_mode | capfirst  }}
+            {% endif %}
+{% endblock %}
+
  {% block content %}
         <details role="list">
             <summary aria-haspopup="listbox" role="button">
@@ -72,17 +81,26 @@
                 <h2>{{ date |date:"l j F"| capfirst }}</h2>
                     {% for event in events_date %}
                         <article>
-                            <h3><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></h3>
-                            {{ event.description }}
+                            <h3>
+                                {% if not event.end_day and event.start_time %}{{ event.start_time }}{% endif %}
+                                <a href="{{ event.get_absolute_url }}">{{ event.title }}</a></h3>
+                            {% if event.end_day %}<p><em>Cet événement dure du {{ event.start_day |date:"l j F" }} au {{ event.end_day |date:"l j F" }}</em></p>{% endif %}
+                            <p>{{ event.description |truncatewords:20 }}</p>
+
                             <footer>
-                            {% if category %}
+                            <p>{% if category %}
                             {{ event.category | small_cat }}
                             {% else %}
                             {% url 'view_mode_cat' selected_mode.name event.category.pk as url_cat %}
                             {{ event.category | small_cat:url_cat }}
-                            {% endif %} 
-                            </article>
-                        </footer>
+                            {% endif %} </p>
+                            <p>
+                                {% for tag in event.tags %}
+                                <a href="" role="button" class="small-cat">{{ tag }}</a>
+                                {% endfor %}
+                            </p>
+                            </footer>
+                        </article>
                     {% endfor %}
                 {% endif %}
                 {% endwith %}

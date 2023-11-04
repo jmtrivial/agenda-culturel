@@ -84,8 +84,10 @@ def css_categories():
     return mark_safe(result)
 
 @register.filter
-def small_cat(category, url=None):
+def small_cat(category, url=None, contrast=True):
+
+    class_contrast = " contrast" if contrast else ""
     if url is None:
-        return mark_safe('<span class="small-cat" role="button"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</span>")
+        return mark_safe('<span class="small-cat' + class_contrast +'" role="button"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</span>")
     else:
-        return mark_safe('<a class="small-cat" role="button" href="' + url + '"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</a>")
+        return mark_safe('<a class="small-cat' + class_contrast +'" role="button" href="' + url + '"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</a>")

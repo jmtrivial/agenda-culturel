@@ -3,9 +3,10 @@
 {% block title %}Tous les événements{% endblock %}
 
 {% block content %}
-<h1>Derniers événements soumis</h1>
 
-<details>
+<h1>Derniers événements soumis</h1>
+    <article>
+        <details>
     <summary>Filtrer et trier</summary>
 <section>
     <form method="get" class="form django-form">
@@ -15,28 +16,27 @@
     </form>
 </section>
 </details>
-
-
 {% for obj in paginator_filter %}
     {{ obj.title }} <br />
 {% endfor %}
 
-<div class="pagination">
-    <span class="step-links">
+<footer>
+    <span>
         {% if paginator_filter.has_previous %}
-            <a href="?page=1">&laquo; premier</a>
-            <a href="?page={{ paginator_filter.previous_page_number }}">précédent</a>
+            <a href="?page=1" role="button">&laquo; premier</a>
+            <a href="?page={{ paginator_filter.previous_page_number }}" role="button">précédent</a>
         {% endif %}
 
-        <span class="current">
+        <span>
             Page {{ paginator_filter.number }} sur {{ paginator_filter.paginator.num_pages }}
         </span>
 
         {% if paginator_filter.has_next %}
-            <a href="?page={{ paginator_filter.next_page_number }}">suivant</a>
-            <a href="?page={{ paginator_filter.paginator.num_pages }}">dernier &raquo;</a>
+            <a href="?page={{ paginator_filter.next_page_number }}" role="button">suivant</a>
+            <a href="?page={{ paginator_filter.paginator.num_pages }}" role="button">dernier &raquo;</a>
         {% endif %}
     </span>
-</div>
+</footer>
+</article>
 
 {% endblock %}
