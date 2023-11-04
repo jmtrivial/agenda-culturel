@@ -5,10 +5,26 @@ $primary-500: #00aaaa;
 $primary-600: #009696;
 $primary-700: #008080;
 
-
+  
 
 // Import Pico
 @import "./pico/pico";
+
+:root {
+    --spacing: 0.4rem;
+    
+    h1 {
+        --typography-spacing-vertical: 0.6rem;
+    }
+    h2 {
+        --typography-spacing-vertical: 0.6rem;
+        --font-size: 1.5rem;
+    }
+    h3 {
+        --typography-spacing-vertical: 0.6rem;
+        --font-size: 1.3rem;
+    }
+}
 
 
 .cat,
