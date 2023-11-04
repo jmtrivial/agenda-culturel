@@ -92,7 +92,7 @@ class EventDetailView(DetailView):
 
 class EventSubmissionFormView(FormView):
     form_class = EventSubmissionModelForm
-    template_name = "agenda_culturel/submission.html"
+    template_name = "agenda_culturel/import.html"
     success_url = "/"
 
     def form_valid(self, form):

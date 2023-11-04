@@ -5,6 +5,8 @@
 {% block content %}
 <h1>Derniers événements soumis</h1>
 
+<details>
+    <summary>Filtrer et trier</summary>
 <section>
     <form method="get" class="form django-form">
                     {% csrf_token %}<br />
@@ -12,6 +14,8 @@
                     <button type="submit">Filtrer</button><br />
     </form>
 </section>
+</details>
+
 
 {% for obj in paginator_filter %}
     {{ obj.title }} <br />

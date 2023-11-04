@@ -40,7 +40,7 @@
             <details role="list" dir="rtl">
                 <summary aria-haspopup="listbox" role="link">Événements</summary>
                 <ul role="listbox">
-                    <li><a href="{% url 'event_submission_form' %}">Ajouter</a></li>
+                    <li><a href="{% url 'event_import_form' %}">Importer</a></li>
                     <li><a>Exporter</a></li>
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'view_all_events' %}">Gérer</a></li>
@@ -55,15 +55,21 @@
     </main>
     
     <footer class="container">
-        <ul>
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'admin:index' %}">administration</a></li>
-            <li><a href="{% url 'logout' %}?next={% url 'home' %}">déconnexion</a></li>
-            <li>vous êtes connecté(e) en tant que {{ user }}</li>
-            {% else %}
-            <li><a href="{% url 'login' %}?next={% url 'view_all_events' %}">connexion</a></li>
-              {% endif %}
-        </ul>
+        <div class="grid">
+            <ul>
+                <li>À propos</li>
+            </ul>
+            <ul>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'admin:index' %}">administration</a></li>
+                <li><a href="{% url 'logout' %}?next={% url 'home' %}">déconnexion</a></li>
+                <li>vous êtes connecté(e) en tant que {{ user }}</li>
+                {% else %}
+                <li><a href="{% url 'login' %}?next={% url 'view_all_events' %}">connexion</a></li>
+                  {% endif %}
+            </ul>
+    
+        </div>
     
     </footer>
 </body>

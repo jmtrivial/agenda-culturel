@@ -71,13 +71,18 @@
                 {% if events_date %}
                 <h2>{{ date |date:"l j F"| capfirst }}</h2>
                     {% for event in events_date %}
-                        <article>{% if category %}
+                        <article>
+                            <h3><a href="{{ event.get_absolute_url }}">{{ event.title }}</a></h3>
+                            {{ event.description }}
+                            <footer>
+                            {% if category %}
                             {{ event.category | small_cat }}
                             {% else %}
                             {% url 'view_mode_cat' selected_mode.name event.category.pk as url_cat %}
                             {{ event.category | small_cat:url_cat }}
-                            {% endif %} <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
-                        </article>
+                            {% endif %} 
+                            </article>
+                        </footer>
                     {% endfor %}
                 {% endif %}
                 {% endwith %}

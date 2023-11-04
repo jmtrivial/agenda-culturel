@@ -86,6 +86,6 @@ def css_categories():
 @register.filter
 def small_cat(category, url=None):
     if url is None:
-        return mark_safe('<span class="small-cat selected ' + category.css_class() + ' button">' + category.name + "</span>")
+        return mark_safe('<span class="small-cat" role="button"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</span>")
     else:
-        return mark_safe('<a class="small-cat selected ' + category.css_class() + ' button" href="' + url + '">' + category.name + "</a>")
+        return mark_safe('<a class="small-cat" role="button" href="' + url + '"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</a>")

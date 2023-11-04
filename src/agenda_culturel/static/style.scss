@@ -10,8 +10,9 @@ $primary-700: #008080;
 // Import Pico
 @import "./pico/pico";
 
-a>.cat,
-a>.action {
+
+.cat,
+.action {
     margin-left: .2em;
     line-height: 1.2em;
     height: 1.2em;
@@ -25,13 +26,15 @@ a>.action {
     font-size: 80%;
 }
 
-a>.cat {
+.cat {
     margin-left: 0;
-    margin-right: .3em;   
+    margin-right: .2em;   
 }
 
 a:hover>.cat,
-a:hover>.action {
+a:hover>.action,
+span:hover>.cat,
+span:hover>.action {
     transition: color var(--transition);
     color: $primary-600;
     background: var(--primary-inverse);
@@ -59,4 +62,10 @@ details[role="list"] summary + ul li.selected>a:hover {
 
 body>nav {
     box-shadow: 0 1px 0 rgba(115, 130, 140, 0.2);
+}
+
+.small-cat {
+    @extend .outline;
+    font-size: 90%;
+    padding: 0.15em 0.4em 0.3em 0.4em;
 }

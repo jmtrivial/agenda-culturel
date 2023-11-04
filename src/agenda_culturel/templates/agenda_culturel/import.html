@@ -1,12 +1,12 @@
 {% extends "agenda_culturel/page.html" %}
 
-{% block title %}Proposer un événement{% endblock %}
+{% block title %}Importer un événement{% endblock %}
 
 {% block content %}
-<h1>Formulaire de proposition d'événement</h1>
+<h1>Importer un événement</h1>
         <form method="post" action="">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="Proposer un événement">
+            <input type="submit" value="Lancer l'import">
         </form>
 {% endblock %}

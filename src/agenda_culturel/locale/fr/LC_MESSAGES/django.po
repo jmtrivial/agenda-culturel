@@ -168,16 +168,12 @@ msgid "Events"
 msgstr "Événements"
 
 #: agenda_culturel/models.py:101
-#, fuzzy
-#| msgid "URLs"
 msgid "URL"
-msgstr "URLs"
+msgstr "URL"
 
 #: agenda_culturel/models.py:101
-#, fuzzy
-#| msgid "List of all the urls where this event can be found."
 msgid "URL where this event can be found."
-msgstr "Liste de toutes les urls où l'événement peut être trouvé."
+msgstr "URL où l'événement peut être trouvé."
 
 #: agenda_culturel/models.py:105
 msgid "Event submission form"

@@ -15,7 +15,7 @@ urlpatterns = [
     re_path(r'^(?P<mode>' + modes + ')/(?P<cat_id>\d+)/$', view_mode_cat, name='view_mode_cat'),
     path("events/", event_list, name='view_all_events'),
     path("event/<int:pk>-<extra>", EventDetailView.as_view(), name="view_event"),
-    path("proposer", EventSubmissionFormView.as_view(), name="event_submission_form"),
+    path("importer", EventSubmissionFormView.as_view(), name="event_import_form"),
     path("admin/", admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path("test_app/", include("test_app.urls")),
