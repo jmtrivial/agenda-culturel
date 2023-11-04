@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <title>{% block title %}{% endblock %}</title>
     
-    <!-- TODO: use a local installation -->
-    <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
 
     {% load static %}
     {% if debug %}
@@ -14,40 +12,58 @@
     {% else %}
     <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
     {% endif %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% load compress %}
+
+    {% compress css %}
+        <link type="text/x-scss" href="{% static 'style.scss' %}" rel="stylesheet" media="screen">
+    {% endcompress %}
+
     {% block entete_header %}
     {% endblock %}
 </head>
 {% load event_extra %}
 <body>
-    <div id="full_content" class="{% block main_class %}{% endblock %}">
-        <header>
-            <h1><a href="{% url 'home' %}">Les nuits énigmagmatiques</a></h1>
-            <div role="doc-subtitle">Agenda culturel de Clermont-Ferrand et des environs</div>
-            <div class="buttons">
+    <nav class="container-fluid">
+        <ul>
+            <li>
+                <a href="/" aria-label="Retour accueil">
+                    <img src="{% static 'images/favicon.svg' %}" />
+                </a>
+            </li>
+            <li>
+                Les nuits énigmagmatiques
+            </li>
+        </ul>
+        <ul>
+            <li>
+            <details role="list" dir="rtl">
+                <summary aria-haspopup="listbox" role="link">Événements</summary>
+                <ul role="listbox">
+                    <li><a href="{% url 'event_submission_form' %}">Ajouter</a></li>
+                    <li><a>Exporter</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'view_all_events' %}">Gérer</a></li>
+                    {% endif %}
+                </ul>
+              </details>
+            </li>
+        </ul>
+    </nav>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer class="container">
+        <ul>
             {% if user.is_authenticated %}
-            <a href="{% url 'view_all_events' %}" id="edit_content_header" class="button rich_button">gérer les événements <span class="button">{% nb_draft_events %}</span></a>
-            {% endif %}
-            {% block add_content %}
-            <a href="{% url 'event_submission_form' %}" id="add_content_header" class="button rich_button">ajouter un événement <span class="button">+</span></a>
-            {% endblock %}
-            </div>
-        </header>
-        <section>
-            {% block content %}{% endblock %}
-        </section>
-        <footer>
-            <ul>
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'admin:index' %}">administration</a></li>
-                <li><a href="{% url 'logout' %}?next={% url 'home' %}">déconnexion</a></li>
-                <li>vous êtes connecté(e) en tant que {{ user }}</li>
-                {% else %}
-                <li><a href="{% url 'login' %}?next={% url 'view_all_events' %}">connexion</a></li>
-                  {% endif %}
-            </ul>
-        
-        </footer>
-        
-    </div>
+            <li><a href="{% url 'admin:index' %}">administration</a></li>
+            <li><a href="{% url 'logout' %}?next={% url 'home' %}">déconnexion</a></li>
+            <li>vous êtes connecté(e) en tant que {{ user }}</li>
+            {% else %}
+            <li><a href="{% url 'login' %}?next={% url 'view_all_events' %}">connexion</a></li>
+              {% endif %}
+        </ul>
+    
+    </footer>
 </body>

@@ -1,4 +1,4 @@
-from os import getenv as os_getenv, path as os_path  # noqa
+from os import getenv as os_getenv, path as os_path # noqa
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_better_admin_arrayfield',
     'django_filters',
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -137,6 +138,12 @@ STATIC_ROOT = os_path.join(BASE_DIR, "static")
 MEDIA_URL = "media/"
 MEDIA_ROOT = os_path.join(BASE_DIR, "media")
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder'
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -161,3 +168,8 @@ REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
 
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
+
+# SCSS
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)

@@ -63,22 +63,22 @@ def css_categories():
     cats = Category.objects.all()
 
     for c in cats:
-        result += "." + c.css_class() + " {"
+
+        result += "a ." + c.css_class() + " {"
         result += background_color_adjust_color(adjust_lightness_saturation(c.color, .2, 0.8), 0.8)
         result += "}"
 
-        result += "a." + c.css_class() + ":hover {"
-        result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.2, 1.2))
+        result += "a:hover ." + c.css_class() + " {"
+        result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.02, 1.0))
         result += "}"
-
-        result += "." + c.css_class() + ".selected {"
+        
+        result += ".selected ." + c.css_class() + " {"
         result += background_color_adjust_color(c.color)
         result += "}"
 
-        result += "span." + c.css_class() + ".selected:hover {"
-        result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.02, 1.0))
+        result += ".selected:hover ." + c.css_class() + " {"
+        result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.2, 1.2))
         result += "}"
-
 
     result += '</style>'
     return mark_safe(result)

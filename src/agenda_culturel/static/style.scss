@@ -1,0 +1,62 @@
+/* Custom Pink version */
+
+// Override default variables
+$primary-500: #00aaaa;
+$primary-600: #009696;
+$primary-700: #008080;
+
+
+
+// Import Pico
+@import "./pico/pico";
+
+a>.cat,
+a>.action {
+    margin-left: .2em;
+    line-height: 1.2em;
+    height: 1.2em;
+    width: 1.2em;
+    border-radius: 0.6em;
+    display: inline-block;
+    color: $primary-500;
+    background: var(--secondary-inverse);
+    vertical-align: middle;
+    text-align: center;
+    font-size: 80%;
+}
+
+a>.cat {
+    margin-left: 0;
+    margin-right: .3em;   
+}
+
+a:hover>.cat,
+a:hover>.action {
+    transition: color var(--transition);
+    color: $primary-600;
+    background: var(--primary-inverse);
+}
+
+nav a>.action {
+    color: var(--primary-inverse);
+    background: $primary-600;
+}
+
+nav a:hover>.action {
+    background: $primary-700;
+    color: var(--primary-inverse);
+}
+
+details[role="list"] summary + ul li.selected>a{
+    background: $primary-600;
+    color: var(--secondary-inverse);
+}
+
+details[role="list"] summary + ul li.selected>a:hover {
+    background: $primary-500;
+    color: var(--primary-inverse);
+}
+
+body>nav {
+    box-shadow: 0 1px 0 rgba(115, 130, 140, 0.2);
+}

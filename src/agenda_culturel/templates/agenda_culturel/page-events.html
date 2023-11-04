@@ -12,56 +12,73 @@
 {% endblock %}
 
  {% block content %}
-    <header>
-        <div id="display-mode" class="nav-buttons">
-            {% for mode in modes %}
+        <details role="list">
+            <summary aria-haspopup="listbox" role="button">
+              {{ selected_mode }}
+            </summary>
+            <ul role="listbox">
+                {% for mode in modes %}
                 {% if selected_mode.name == mode.name %}
-                <span class="mode selected">{{ mode }}</span>
+                    <li class="selected"><a>{{ mode }}</a></li>
                 {% else %}
                     {% if category %}
-                        <a href="{% url 'view_mode_cat' mode.name category.pk %}" class="mode button">{{ mode }}</a>
+                        <li><a href="{% url 'view_mode_cat' mode.name category.pk %}">{{ mode }}</a></li>
                     {% else %}
-                    <a href="{% url 'view_mode' mode.name %}" class="mode button">{{ mode }}</a>
+                        <li><a href="{% url 'view_mode' mode.name %}">{{ mode }}</a></li>
                     {% endif %}
                 {% endif %}
-            {% endfor %}
-        </div>
-        <div id="categories" class="nav-buttons">
-            {% for cat in categories %}
-                {% if category == cat %}
-                <span class="cat {{ cat.css_class }} selected button">{{ cat }} <a href="{% url 'view_mode' selected_mode.name %}" class="close">✕</a></span>
-                {% else %}
-                    <a href="{% url 'view_mode_cat' selected_mode.name cat.pk %}" class="cat {{ cat.css_class }} {% if category == None %}selected{% endif %} button">{{ cat }}</a>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </header>
+              {% endfor %}
+            </ul>
+          </details>
+
+        <details role="list">
+            <summary aria-haspopup="listbox" role="button">
+                {% if category %}
+                {{ category.alt_name | capfirst }}
+                {% else %} Tous les événements
+            {% endif %}</summary>
+            <ul role="listbox">
+                {% for cat in categories %}
+                    {% if category == cat %}
+                    <li class="selected" aria-label="Désélectionner"><a href="{% url 'view_mode' selected_mode.name %}">
+                        <span class="cat {{ cat.css_class }}"></span>
+                        {{ cat }}
+                        <span class="action">✕</span>
+                    </a></li>
+                    {% else %}
+                    <li><a href="{% url 'view_mode_cat' selected_mode.name cat.pk %}"{% if not category %}class="selected" {% endif %}>
+                        <span class="cat {{ cat.css_class }}"></span>
+                        {{ cat }}
+                    </a></li>
+                    {% endif %}
+                {% endfor %}
+                    </ul>
+        </details>
+
     <section>
         {% block events %}
-        <h2> {% if category %}
+        <h1> {% if category %}
             {{ category.alt_name | capfirst }}
             {{ selected_mode }}
             {% else %}
             {{ selected_mode | capfirst  }}
-            {% endif %}</h2>
+            {% endif %}</h1>
             
             {% if events %}
                 {% for date in dates %}
                     
                 {% with events_date=events|in_date:date %}
                 {% if events_date %}
-                <h3>{{ date |date:"l j F"| capfirst }}</h3>
-                <lu>
+                <h2>{{ date |date:"l j F"| capfirst }}</h2>
                     {% for event in events_date %}
-                        <li>{% if category %}
+                        <article>{% if category %}
                             {{ event.category | small_cat }}
                             {% else %}
                             {% url 'view_mode_cat' selected_mode.name event.category.pk as url_cat %}
                             {{ event.category | small_cat:url_cat }}
                             {% endif %} <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
-                        </li>
+                        </article>
                     {% endfor %}
-                </lu>
                 {% endif %}
                 {% endwith %}
                 {% endfor %}
@@ -71,7 +88,4 @@
             {% endif %}
         {% endblock %}
     </section>
-    <footer id="tags">
-        TODO 
-    </footer>    
  {% endblock %}
