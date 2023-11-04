@@ -28,7 +28,7 @@
     <p>{{ event.category | small_cat }}</p>
     <p>
         {% for tag in event.tags %}
-        <a href="" role="button" class="small-cat">{{ tag }}</a>
+        <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
         {% endfor %}
     </p>
     </footer>

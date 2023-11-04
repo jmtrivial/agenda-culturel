@@ -1,0 +1,41 @@
+{% extends "agenda_culturel/page.html" %}
+
+{% block title %}Étiquette {{ tag }}{% endblock %}
+
+{% load cat_extra %}
+
+
+{% block content %}
+
+<h1>Étiquette <em>{{ tag }}</em></h1>
+
+{% for event in events %}
+<article>
+    <h3>
+        {% if not event.end_day and event.start_time %}{{ event.start_time }}{% endif %}
+        <a href="{{ event.get_absolute_url }}">{{ event.title }}</a></h3>
+        <ul>
+            <li>Début&nbsp;: {{ event.start_day }} {% if event.start_time %} à {{ event.start_time }}{% endif %}</li>
+            {% if event.end_day or event.end_time %}
+            <li>Fin&nbsp;: 
+            {% if event.end_day %}{{ event.end_day }}{% endif %}
+            {% if event.end_time %}{{ event.end_time }}{% endif %}
+            </li>
+            {% endif %}
+            
+        </ul>
+
+    <p>{{ event.description |truncatewords:20 }}</p>
+
+    <footer>
+    <p>{{ event.category | small_cat }}</p>
+    <p>
+        {% for tag in event.tags %}
+        <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
+        {% endfor %}
+    </p>
+    </footer>
+</article>
+{% endfor %}
+
+{% endblock %}

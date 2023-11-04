@@ -16,6 +16,7 @@ import django_filters
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 
+import unicodedata
 
 
 class DisplayMode(StrEnum):
@@ -78,6 +79,25 @@ def view_mode_cat(request, mode, cat_id):
     events = Event.objects.filter(start_day__lte=dates[-1], start_day__gte=dates[0], category=category).order_by("start_day", "start_time")
     context = {"modes": list(DisplayMode), "selected_mode": DisplayMode[mode], "category": category, "categories": categories, "events": events, "dates": dates}
     return render(request, 'agenda_culturel/page-events.html', context)
+
+
+def view_tag(request, t):
+    events = Event.objects.filter(tags__contains=[t]).order_by("start_day", "start_time")
+    context = {"tag": t, "events": events}
+    return render(request, 'agenda_culturel/tag.html', context)
+
+def tag_list(request):
+    def remove_accents(input_str):
+        nfkd_form = unicodedata.normalize('NFKD', input_str)
+        return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
+
+
+    tags = list(Event.objects.values_list('tags', flat = True))
+    uniq_tags = set()
+    for t in tags:
+        uniq_tags = uniq_tags | set(t)
+    context = {"tags": sorted(list(uniq_tags), key=lambda x: remove_accents(x).lower())}
+    return render(request, 'agenda_culturel/tags.html', context)
 
 
 class EventDetailView(DetailView):
