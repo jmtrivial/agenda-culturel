@@ -58,14 +58,12 @@
     </header>
     {% endif %}
 
-    {% comment %}
-    manque encore: 
-    * image, image_alt
-    {% endcomment %}
+    {% if event.image %}
+    <article class='illustration{% if display in "in list by day" %}-small{% endif %}'>
+        <img src="{{ event.image }}" alt="{{ event.image_alt }}" />
+    </article>
+    {% endif %}
 
-    {% comment %}
-    On affiche le corps du message avec plus ou moins de longueur
-    {% endcomment %}
     {% if display in "in list by day" %}
         <p>{{ event.description |truncatewords:20 }}</p>
     {% else %}

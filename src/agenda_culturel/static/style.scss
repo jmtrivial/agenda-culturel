@@ -132,3 +132,19 @@ svg {
     font-weight: bold;
 }
 
+.illustration {
+    float: right;
+    width: 20em;
+    margin: 0 0 0.5em .5em;
+    padding: 0.3em;
+}
+
+.illustration-small {
+    @extend .illustration;
+    width: 10em;
+}
+
+footer {
+    clear: both;
+}
+
