@@ -45,6 +45,7 @@
             {% endfor %}
         <ul>
     {% else %}
+        <ul>
         {% for event in day.events %}
         <li>{{ event.category | circle_cat }}
             {% if event.single_day and event.start_time %}
