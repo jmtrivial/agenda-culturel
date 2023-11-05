@@ -148,3 +148,16 @@ footer {
     clear: both;
 }
 
+.infos-and-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch
+}
+
+.infos-and-buttons .infos {
+    flex: 50;
+}
+
+.infos-and-buttons .buttons {
+    flex: auto;
+}

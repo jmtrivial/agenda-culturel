@@ -41,6 +41,7 @@
                 <summary aria-haspopup="listbox" role="link">Événements</summary>
                 <ul role="listbox">
                     <li><a href="{% url 'event_import_form' %}">Importer</a></li>
+                    <li><a href="{% url 'add_event' %}">Créer</a></li>
                     <li><a>Exporter</a></li>
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'view_all_events' %}">Gérer</a></li>

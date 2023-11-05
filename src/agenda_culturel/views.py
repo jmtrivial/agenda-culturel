@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, FormView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import EventSubmissionModelForm
 from .celery import create_event_from_submission
@@ -10,6 +12,7 @@ from enum import StrEnum
 from datetime import datetime, timedelta
 from django.db.models import Q
 
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import activate, get_language_info
 import django_filters
@@ -98,6 +101,22 @@ def tag_list(request):
         uniq_tags = uniq_tags | set(t)
     context = {"tags": sorted(list(uniq_tags), key=lambda x: remove_accents(x).lower())}
     return render(request, 'agenda_culturel/tags.html', context)
+
+
+class EventCreateView(CreateView):
+    model = Event
+    fields = ["title"] # TODO add elements
+    template_name_suffix = "_create_form"
+
+
+class EventUpdateView(LoginRequiredMixin, UpdateView):
+    model = Event
+    fields = ["title"] # TODO add elements
+
+
+class EventDeleteView(LoginRequiredMixin, DeleteView):
+    model = Event
+    success_url = reverse_lazy('view_all_events')
 
 
 class EventDetailView(DetailView):

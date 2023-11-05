@@ -3,6 +3,12 @@
 {% load utils_extra %}
 {% load event_extra %}
 
+{% comment %}
+    TODO: 
+    * utiliser flex plutôt que float pour l'image et pour la date
+    * gérer le flex des boutons dans le cas de petits écrans 
+{% endcomment %}
+
 <article>
     {% if display in "in list by day" %}
     {% if display == "in list by day" and event|can_show_start_time %}
@@ -76,39 +82,44 @@
     {% comment %}
     On affiche le pied qui contient les informations de tags, catégories, etc
     {% endcomment %}
-<footer>
-    <p>
-    {% if mode %}
-        {% if category %}
-            {{ event.category | small_cat }}
+<footer class="infos-and-buttons">
+    <div class="infos">
+        <p>
+        {% if mode %}
+            {% if category %}
+                {{ event.category | small_cat }}
+            {% else %}
+                {% url 'view_mode_cat' selected_mode.name event.category.pk as url_cat %}
+                {{ event.category | small_cat:url_cat }}
+            {% endif %}
         {% else %}
-            {% url 'view_mode_cat' selected_mode.name event.category.pk as url_cat %}
-            {{ event.category | small_cat:url_cat }}
+            {{ event.category | small_cat }}
         {% endif %}
-    {% else %}
-        {{ event.category | small_cat }}
-    {% endif %}
-    </p>
-    <p>
-        {% for tag in event.tags %}
-        <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
+        </p>
+        <p>
+            {% for tag in event.tags %}
+            <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
+            {% endfor %}
+        </p>
+
+        {% if event.reference_urls %}
+        {% if display in "in list by day" %}
+        <p>Source{{ event.reference_urls|pluralize }}&nbsp;:
+        {% else %}
+        <p>Cet événement est proposé par&nbsp;:
+        {% endif %} 
+        {% for eurl in event.reference_urls %}
+        <a href="{{ eurl }}">{{ eurl|hostname }}</a>{% if not forloop.last %}, {% endif %}
         {% endfor %}
-    </p>
-
-    {% if event.reference_urls %}
-    {% if display in "in list by day" %}
-    <p>Source{{ event.reference_urls|pluralize }}&nbsp;:
+        </p>
     {% else %}
-    <p>Cet événement est proposé par&nbsp;:
-    {% endif %} 
-    {% for eurl in event.reference_urls %}
-    <a href="{{ eurl }}">{{ eurl|hostname }}</a>{% if not forloop.last %}, {% endif %}
-    {% endfor %}
-    </p>
-{% else %}
-    <p><em>Cet événement est disponible uniquement sur les nuits énimagmatiques.</em></p>
-{% endif %}
-
+        <p><em>Cet événement est disponible uniquement sur les nuits énimagmatiques.</em></p>
+    {% endif %}
+    </div>
+    <div class="buttons">
+        <a href="{% url 'edit_event' event.id %}" role="button">éditer</a>
+        <a href="{% url 'delete_event' event.id %}" role="button">supprimer</a>
+    </div>
     </footer>
 </article>
 

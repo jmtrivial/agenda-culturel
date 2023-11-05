@@ -1,0 +1,15 @@
+{% extends "agenda_culturel/page.html" %}
+
+{% block title %}Éditer {{ object.title }}{% endblock %}
+
+
+
+{% block content %}
+<h1>Édition de l'événement {{ object.title }} ({{ object.start_day }})</h1>
+
+<form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Enregistrer">
+</form>
+
+{% endblock %}
