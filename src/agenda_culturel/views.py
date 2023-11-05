@@ -9,7 +9,8 @@ from .celery import create_event_from_submission
 from .models import Event, Category
 from django.utils import timezone
 from enum import StrEnum
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+import calendar
 from django.db.models import Q
 
 from django.urls import reverse_lazy
@@ -22,66 +23,167 @@ from django.contrib.auth.decorators import login_required
 import unicodedata
 
 
-class DisplayMode(StrEnum):
-    this_week = "this week"
-    this_weekend = "this weekend"
-    next_week = "next week"
-    next_weekend = "next weekend"
-    this_month = "this month"
-    next_month = "next month"
+def daterange(start, end, step=timedelta(1)):
+    if end is None:
+        yield start
+    else:
+        curr = start
+        while curr <= end:
+            yield curr
+            curr += step
 
-    def i18n_value(self):
-        return _(self.value)
 
-    def get_dates(self):
-        now = datetime.now()
-        if self in [DisplayMode.this_week, DisplayMode.next_week]:
-            day = now.weekday() # 0: Monday, 6: Sunday
-            start = now + timedelta(days=-day)
-            if self == DisplayMode.next_week:
-                start += timedelta(days=7)
-            return [start + timedelta(days=x) for x in range(0, 7)]
-        elif self in [DisplayMode.this_weekend, DisplayMode.next_weekend]:
-            day = now.weekday() # 0: Monday, 6: Sunday
-            start = now + timedelta(days=-day + 5)
-            if self == DisplayMode.next_week:
-                start += timedelta(days=7)
-            return [start + timedelta(days=x) for x in range(0, 2)]
-        elif self in [DisplayMode.this_month, DisplayMode.next_month]:
-            start = now.replace(day=1)
-            if self == DisplayMode.next_month:
-                start = (start.replace(day=1) + timedelta(days=32)).replace(day=1)
-            next_month = start.replace(day=28) + timedelta(days=4)
-            end = next_month - timedelta(days=next_month.day)
-            delta = end - start
-            return [start + timedelta(days=x) for x in range(0, delta.days + 1)]
+class CalendarDay:
 
-    def __str__(self):
-        return str(self.i18n_value())
+    def __init__(self, d, on_requested_interval = True):
+        self.date = d
+        now = date.today()
+        self.in_past = d < now
+        self.events = []
+
+        self.events_by_category = {}
+
+    def is_in_past(self):
+        return in_past
+
+    def add_event(self, event):
+        self.events.append(event)
+        if not event.category.name in self.events_by_category:
+            self.events_by_category[event.category.name] = []
+        self.events_by_category[event.category.name].append(event)
+
+
+class CalendarList:
+
+    def __init__(self, firstdate, lastdate):
+        self.firstdate = firstdate
+        self.lastdate = lastdate
+
+        # start the first day of the first week
+        self.c_firstdate = firstdate + timedelta(days=-firstdate.weekday())
+        # end the last day of the last week
+        self.c_lastdate = lastdate + timedelta(days=6-lastdate.weekday())
+
+
+        # create a list of CalendarDays
+        self.create_calendar_days()
+
+        # fill CalendarDays with events
+        self.fill_calendar_days()
+
+
+    def fill_calendar_days(self):
+        self.events = Event.objects.filter(start_day__lte=self.c_lastdate, start_day__gte=self.c_firstdate).order_by("start_day", "start_time")
+
+        for e in self.events:
+            for d in daterange(e.start_day, e.end_day):
+                if d.__str__() in self.calendar_days:
+                    self.calendar_days[d.__str__()].add_event(e)
+
+
+    def create_calendar_days(self):
+        # create daylist
+        self.calendar_days = {}
+        for d in daterange(self.c_firstdate, self.c_lastdate):
+            self.calendar_days[d.strftime("%Y-%m-%d")] = CalendarDay(d, d >= self.firstdate and d <= self.lastdate)
+
+
+    def is_single_week(self):
+        return hasattr(self, "week")
+
+    
+    def is_full_month(self):
+        return hasattr(self, "month")
+
+
+    def calendar_days_list(self):
+        return list(self.calendar_days.values())
+
+class CalendarMonth(CalendarList):
+
+    def __init__(self, year, month):
+        self.year = year
+        self.month = month
+        r = calendar.monthrange(year, month)
+
+        first = date(year, month, r[0])
+        last = date(year, month, r[1])
+
+        super().__init__(first, last)
+
+    def get_month_name(self):
+        return self.firstdate.strftime("%B")
+
+    def next_month(self):
+        return self.lastdate + timedelta(days=7)
+
+    def previous_month(self):
+        return self.firstdate + timedelta(days=-7)
+
+
+class CalendarWeek(CalendarList):
+
+    def __init__(self, year, week):
+        self.year = year
+        self.week = week
+
+        first = date.fromisocalendar(self.year, self.week, 1)
+        last = date.fromisocalendar(self.year, self.week, 7)
+
+        super().__init__(first, last)
+
+    def next_week(self):
+        return self.firstdate + timedelta(days=7)
+
+    def previous_week(self):
+        return self.firstdate + timedelta(days=-7)
 
 
 def home(request):
-    # TODO: si on est au début de la semaine, on affiche la semaine en entier
-    # sinon, on affiche le week-end
-    # sauf si on est dimanche après 23h, on affiche la semaine prochaine
-    return view_mode(request, DisplayMode.this_week.name)
+    return week_view(request)
+    #return month_view(request, now.year, now.month)
+
+def month_view(request, year = None, month = None):
+    # TODO: filter by category, tag
+    now = date.today()
+    if year == None:
+        year = now.year
+    if month == None:
+        month = now.month
+    cmonth = CalendarMonth(year, month)
+
+    context = {"year": year, "month": cmonth.get_month_name(), "calendar": cmonth }
+    return render(request, 'agenda_culturel/page-month.html', context)
 
 
-def view_mode(request, mode):
-    categories = Category.objects.all()
-    dates = DisplayMode[mode].get_dates()
-    events = Event.objects.filter(Q(start_day__lte=dates[-1]) & Q(start_day__gte=dates[0])).order_by("start_day", "start_time")
-    context = {"modes": list(DisplayMode), "selected_mode": DisplayMode[mode], "categories": categories, "events": events, "dates": dates}
-    return render(request, 'agenda_culturel/page-events.html', context)
+def week_view(request, year = None, week = None):
+    now = date.today()
+    if year == None:
+        year = now.year
+    if week == None:
+        week = now.isocalendar()[1]
+
+    cweek = CalendarWeek(year, week)
+
+    context = {"year": year, "week": week, "calendar": cweek }
+    return render(request, 'agenda_culturel/page-week.html', context)
 
 
-def view_mode_cat(request, mode, cat_id):
-    category = get_object_or_404(Category, pk=cat_id)
-    categories = Category.objects.all()
-    dates = DisplayMode[mode].get_dates()
-    events = Event.objects.filter(start_day__lte=dates[-1], start_day__gte=dates[0], category=category).order_by("start_day", "start_time")
-    context = {"modes": list(DisplayMode), "selected_mode": DisplayMode[mode], "category": category, "categories": categories, "events": events, "dates": dates}
-    return render(request, 'agenda_culturel/page-events.html', context)
+def day_view(request, year = None, month = None, day = None):
+    now = date.today()
+    if year == None:
+        year = now.year
+    if month == None:
+        month = now.month
+    if day == None:
+        day = now.day
+
+    day = date(year, month, day)
+
+    events = Event.objects.filter(start_day__lte=day, start_day__gte=day).order_by("start_day", "start_time")
+    # TODO
+    context = {"day": day, "events": events}
+    return render(request, 'agenda_culturel/page-day.html', context)
 
 
 def view_tag(request, t):

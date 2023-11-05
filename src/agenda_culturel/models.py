@@ -86,6 +86,9 @@ class Event(models.Model):
 
     tags = ArrayField(models.CharField(max_length=64), verbose_name=_('Tags'), help_text=_("A list of tags that describe the event."), blank=True, null=True)
 
+    def single_day(self):
+        return not self.end_day or self.end_day == self.start_day
+
     def get_absolute_url(self):
         return reverse("view_event", kwargs={"pk": self.pk, "extra": self.title})
 

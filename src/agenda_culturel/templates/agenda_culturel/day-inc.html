@@ -1,0 +1,66 @@
+
+{% load cat_extra %}
+{% load static %}
+
+{% with day.date|date:"Y-m-d" as daytag %}
+{% with "date-"|add:daytag as daytag %}
+
+<article class="day" id="{{ daytag }}">
+    <h2><a href="{% url 'day_view' day.date.year day.date.month day.date.day %}">{{ day.date | date:"l j" }}</a></h2>
+    {% if day.events %}
+    {% if resume %}
+        <ul>
+            {% for category, events in day.events_by_category.items %}
+            <li>{{ events.0.category | circle_cat }} 
+                <a href="{{ daytag }}" data-target="{{ daytag }}-category-{{ category.id }}" onClick="toggleModal(event)">{{ events | length }} {{ category }}</a></li>
+                <dialog id="{{ daytag }}-category-{{ category.id }}">
+                    <article>
+                        <header>
+                            <a href="#{{ daytag }}-category-{{ category.id }}" 
+                                aria-label="Fermer" 
+                                class="close" 
+                                data-target="{{ daytag }}-category-{{ category.id }}"
+                                onClick="toggleModal(event)"></a>
+                                <h3>{{ events.0.category | small_cat }} du {{ day.date | date:"l j F" }}</h3>
+                        </header>
+                        <ul>
+                            {% for event in events %}
+                            <li>
+                                {% if event.single_day and event.start_time %}
+                                {{ event.start_time }}
+                                {% endif %}
+                                <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <footer>
+                            <div class="buttons">
+                                <a href="{% url 'day_view' day.date.year day.date.month day.date.day %}" role="button">Voir la journée <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
+                                </svg></a>
+                            </div>
+                        </footer>
+                    </article>
+                </dialog>
+            {% endfor %}
+        <ul>
+    {% else %}
+        {% for event in day.events %}
+        <li>{{ event.category | circle_cat }}
+            {% if event.single_day and event.start_time %}
+            {{ event.start_time }}
+            {% endif %}
+            <a href="{{ daytag }}" data-target="event-{{ event.id }}" onClick="toggleModal(event)">{{ event.title }}</a>
+            <dialog id="event-{{ event.id }}">
+                {% include "agenda_culturel/event-inc.html" with event=event display="modal" close_button=1 %}
+            </dialog>
+        </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endif %}
+</ul>
+</article>
+
+{% endwith %}
+{% endwith %}

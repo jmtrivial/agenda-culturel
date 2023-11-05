@@ -1,0 +1,66 @@
+{% extends "agenda_culturel/page.html" %}
+
+
+
+{% load i18n %}
+
+{% load cat_extra %}
+{% load event_extra %}
+{% load utils_extra %}
+{% load static %}
+
+
+{% block entete_header %}
+    {% css_categories %}
+{% endblock %}
+
+{% block title %}
+Événements du {{ date | date:"l j F" }}
+{% endblock %}
+
+
+ {% block content %}
+
+
+ <h1>Les événements du {{ day | date:"l j F" }}</h1>
+ 
+ 
+
+
+
+<article>
+        <div class="grid navigation">
+            <div>
+            {% with day|shift_day:-1 as pred_day %}
+            <a role="button" href="{% url 'day_view' pred_day.year pred_day.month pred_day.day %}"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#chevron-left" />
+            </svg> Jour précédent</a>
+            {% endwith %}
+            </div>
+            <div class="right">
+            {% with day|shift_day:1 as next_day %}
+                <a role="button" href="{% url 'day_view' next_day.year next_day.month next_day.day %}">Jour suivant <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
+            </svg></a>
+            {% endwith %}
+            </div>
+        </div>
+</article>
+
+    {% if events %}
+    {% for event in events %}
+        {% include "agenda_culturel/event-inc.html" with event=event display="in list by day" %}
+    {% endfor %}
+    {% else %}
+    <article>
+        Il n'y a pas d'événement prévu à cette date.
+    </article>
+    {% endif %}
+
+    <article>
+        <p>Voir aussi tous les événements 
+            <a href="{% url 'week_view' day.year day|week %}">de la semaine 
+                du {{ day|first_day_of_this_week }}
+                au {{ day|last_day_of_this_week }}</a>.</p>
+    </article>
+ {% endblock %}

@@ -1,0 +1,56 @@
+{% extends "agenda_culturel/page.html" %}
+
+
+
+{% load i18n %}
+
+{% load cat_extra %}
+{% load event_extra %}
+{% load utils_extra %}
+{% load static %}
+
+
+{% block entete_header %}
+    {% css_categories %}
+    <script src="{% static 'js/modal.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+Événements {{ calendar.firstdate | date:"F o"|add_de }}
+{% endblock %}
+
+{% block main-fluid %}-fluid{% endblock %}
+{% block footer-fluid %}-fluid{% endblock %}
+
+ {% block content %}
+ <h1>Événements de {{ calendar.firstdate | date:"F o" }}</h1>
+
+ <article>
+    <header>
+        <div class="grid navigation">
+            <div>
+            <a role="button" href="{% url 'month_view' calendar.previous_month.year calendar.previous_month.month %}"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#chevron-left" />
+            </svg> Mois précédent</a>
+            </div>
+            <div class="right">
+            <a role="button" href="{% url 'month_view' calendar.next_month.year calendar.next_month.month %}">Mois suivant <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
+            </svg></a>
+            </div>
+        </div>
+    </header>
+    <div id="calendar">
+        <div class="grid">
+        {% for d in calendar.calendar_days_list %}
+        {% if forloop.counter0|divisibleby:7 and not forloop.first %}</div><div class="grid">{% endif %}
+        {% include "agenda_culturel/day-inc.html" with day=d resume=1 %}
+        {% endfor %}
+        </div>
+    </div>
+
+</article>
+
+ 
+ 
+ {% endblock %}

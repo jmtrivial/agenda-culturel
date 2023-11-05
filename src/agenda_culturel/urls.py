@@ -7,12 +7,14 @@ from django.contrib.auth import views as auth_views
 
 from .views import *
 
-modes = '|'.join([dm.name for dm in DisplayMode])
-
 urlpatterns = [
     path("", home, name="home"),
-    re_path(r'^(?P<mode>' + modes + ')/$', view_mode, name='view_mode'),
-    re_path(r'^(?P<mode>' + modes + ')/(?P<cat_id>\d+)/$', view_mode_cat, name='view_mode_cat'),
+    path("semaine/<int:year>/<int:week>/", week_view, name='week_view'),
+    path("mois/<int:year>/<int:month>/", month_view, name='month_view'),
+    path("jour/<int:year>/<int:month>/<int:day>/", day_view, name='day_view'),
+    path("aujourdhui/", day_view, name="aujourdhui"),
+    path("cette-semaine/", week_view, name="cette_semaine"),
+    path("ce-mois-ci", month_view, name="ce_mois_ci"),
     path("tag/<t>/", view_tag, name='view_tag'),
     path("tags/", tag_list, name='view_all_tags'),
     path("events/", event_list, name='view_all_events'),

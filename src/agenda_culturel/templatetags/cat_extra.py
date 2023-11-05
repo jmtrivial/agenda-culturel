@@ -64,12 +64,11 @@ def css_categories():
 
     for c in cats:
 
-        result += "a ." + c.css_class() + ","
-        result += "span ." + c.css_class() + " {"
+        result += "." + c.css_class() + " {"
         result += background_color_adjust_color(adjust_lightness_saturation(c.color, .2, 0.8), 0.8)
         result += "}"
 
-        result += "a:hover ." + c.css_class() + " {"
+        result += "*:hover ." + c.css_class() + " {"
         result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.02, 1.0))
         result += "}"
         
@@ -92,3 +91,7 @@ def small_cat(category, url=None, contrast=True):
         return mark_safe('<span class="small-cat' + class_contrast +' selected" role="button"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</span>")
     else:
         return mark_safe('<a class="small-cat' + class_contrast +' selected" role="button" href="' + url + '"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</a>")
+
+@register.filter
+def circle_cat(category):
+    return mark_safe('<span class="cat ' + category.css_class() + '" data-tooltip="' + category.name + '"></span>')

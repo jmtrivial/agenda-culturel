@@ -45,83 +45,120 @@
                 {% include "agenda_culturel/date-times-inc.html" with event=event %}
             </em></p>
         {% endif %}
+    {% elif display == "modal" %}
+
+    <header>
+        <a href="#event-{{ event.id }}" 
+            aria-label="Fermer" 
+            class="close" 
+            data-target="event-{{ event.id }}"
+            onClick="toggleModal(event)"></a>
+            <h3>{{ event.category | small_cat }} {{ event.title }}</h3>
+        
+            <p>
+                <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <use href="{% static 'images/feather-sprite.svg' %}#map-pin" />
+                </svg>
+                {{ event.location }}
+            </p>
+            <p><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#calendar" />
+            </svg>
+                {% if event.end_day %}du{% else %}le{% endif %}
+                {% include "agenda_culturel/date-times-inc.html" with event=event %}
+            </p>
+    </header>
+
     {% else %}
     <header>
         {% include "agenda_culturel/ephemeris-inc.html" with event=event %}
         <h1>{{ event.title }}</h1>
-        <p>
-            <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="{% static 'images/feather-sprite.svg' %}#map-pin" />
-            </svg>
-            {{ event.location }}
-        </p>
         <p><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <use href="{% static 'images/feather-sprite.svg' %}#calendar" />
         </svg>
             {% if event.end_day %}du{% else %}le{% endif %}
             {% include "agenda_culturel/date-times-inc.html" with event=event %}
         </p>
+        <p>
+            <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#map-pin" />
+            </svg>
+            {{ event.location }}
+        </p>
     </header>
     {% endif %}
 
-    {% if event.image %}
+    {% if event.image and display != "modal" %}
     <article class='illustration{% if display in "in list by day" %}-small{% endif %}'>
         <img src="{{ event.image }}" alt="{{ event.image_alt }}" />
     </article>
     {% endif %}
 
-    {% if display in "in list by day" %}
+    {% if display in "in list by day" or display == "modal" %}
         <p>{{ event.description |truncatewords:20 }}</p>
     {% else %}
         <p>{{ event.description }}</p>
     {% endif %}
 
 
-
-
-    {% comment %}
-    On affiche le pied qui contient les informations de tags, catégories, etc
-    {% endcomment %}
-<footer class="infos-and-buttons">
-    <div class="infos">
-        <p>
-        {% if mode %}
-            {% if category %}
-                {{ event.category | small_cat }}
-            {% else %}
-                {% url 'view_mode_cat' selected_mode.name event.category.pk as url_cat %}
-                {{ event.category | small_cat:url_cat }}
-            {% endif %}
-        {% else %}
-            {{ event.category | small_cat }}
-        {% endif %}
-        </p>
-        <p>
-            {% for tag in event.tags %}
-            <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
-            {% endfor %}
-        </p>
-
-        {% if event.reference_urls %}
-        {% if display in "in list by day" %}
-        <p>Source{{ event.reference_urls|pluralize }}&nbsp;:
-        {% else %}
-        <p>Cet événement est proposé par&nbsp;:
-        {% endif %} 
-        {% for eurl in event.reference_urls %}
-        <a href="{{ eurl }}">{{ eurl|hostname }}</a>{% if not forloop.last %}, {% endif %}
+    {% if display == "modal" %}
+    <p>
+        {% for tag in event.tags %}
+        <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
         {% endfor %}
-        </p>
-    {% else %}
-        <p><em>Cet événement est disponible uniquement sur les nuits énimagmatiques.</em></p>
-    {% endif %}
-    </div>
-    {% if user.is_authenticated %}
-    <div class="buttons">
-        <a href="{% url 'edit_event' event.id %}" role="button">éditer</a>
-        <a href="{% url 'delete_event' event.id %}" role="button">supprimer</a>
-    </div>
-    {% endif %}
+    </p>
+
+    <footer class="infos-and-buttons">
+        <div class="buttons">
+            <a href="{{ event.get_absolute_url }}" role="button">Voir l'événement <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
+            </svg></a>
+        </div>
     </footer>
+    {% else %}
+
+    
+    <footer class="infos-and-buttons">
+        <div class="infos">
+            <p>
+            {% if mode %}
+                {% if category %}
+                    {{ event.category | small_cat }}
+                {% else %}
+                    {% url 'view_mode_cat' selected_mode.name event.category.pk as url_cat %}
+                    {{ event.category | small_cat:url_cat }}
+                {% endif %}
+            {% else %}
+                {{ event.category | small_cat }}
+            {% endif %}
+            </p>
+            <p>
+                {% for tag in event.tags %}
+                <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
+                {% endfor %}
+            </p>
+
+            {% if event.reference_urls %}
+            {% if display in "in list by day" %}
+            <p>Source{{ event.reference_urls|pluralize }}&nbsp;:
+            {% else %}
+            <p>Cet événement est proposé par&nbsp;:
+            {% endif %} 
+            {% for eurl in event.reference_urls %}
+            <a href="{{ eurl }}">{{ eurl|hostname }}</a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            </p>
+        {% else %}
+            <p><em>Cet événement est disponible uniquement sur les nuits énimagmatiques.</em></p>
+        {% endif %}
+        </div>
+        {% if user.is_authenticated %}
+        <div class="buttons">
+            <a href="{% url 'edit_event' event.id %}" role="button">éditer</a>
+            <a href="{% url 'delete_event' event.id %}" role="button">supprimer</a>
+        </div>
+        {% endif %}
+        </footer>
+    {% endif %}
 </article>
 

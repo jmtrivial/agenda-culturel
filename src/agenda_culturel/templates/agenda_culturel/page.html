@@ -27,15 +27,26 @@
     <nav class="container-fluid">
         <ul>
             <li>
-                <a href="/" aria-label="Retour accueil">
+                <a href="{% url 'home' %}" aria-label="Retour accueil">
                     <img src="{% static 'images/favicon.svg' %}" />
                 </a>
             </li>
             <li>
-                Les nuits énigmagmatiques
+                <a href="{% url 'home' %}" aria-label="Retour accueil">Les nuits énimagmatiques</a>
+                
             </li>
         </ul>
         <ul>
+            <li>
+                <details role="list" dir="rtl">
+                    <summary aria-haspopup="listbox" role="link">Dates</summary>
+                    <ul role="listbox">
+                        <li><a href="{% url 'aujourdhui' %}">Aujourd'hui</a></li>
+                        <li><a href="{% url 'cette_semaine' %}">Cette semaine</a></li>
+                        <li><a href="{% url 'ce_mois_ci' %}">Ce mois-ci</a></li>
+                    </ul>
+                  </details>
+                </li>
             <li>
             <details role="list" dir="rtl">
                 <summary aria-haspopup="listbox" role="link">Événements</summary>
@@ -51,11 +62,11 @@
             </li>
         </ul>
     </nav>
-    <main class="container">
+    <main class="container{% block main-fluid %}{% endblock %}">
         {% block content %}{% endblock %}
     </main>
     
-    <footer class="container">
+    <footer class="container{% block footer-fluid %}{% endblock %}">
         <div class="grid">
             <ul>
                 <li><a href="{% url 'view_all_tags' %}">Toutes les étiquettes</a></li>
