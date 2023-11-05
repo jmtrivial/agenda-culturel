@@ -13,3 +13,12 @@ def in_date(event, date):
 @register.simple_tag
 def nb_draft_events():
     return Event.objects.filter(status=Event.STATUS.DRAFT).count()
+
+@register.filter
+def can_show_start_time(event):
+    return event.start_time and (not event.end_day or event.end_day == event.start_day)
+
+
+@register.filter
+def need_complete_display(event, display):
+    return event.end_day and event.end_day != event.start_day and (event.start_time or event.end_time or display == "in list by day")

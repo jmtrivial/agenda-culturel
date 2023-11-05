@@ -1,36 +1,66 @@
+{% load static %}
 {% load cat_extra %}
-
+{% load utils_extra %}
+{% load event_extra %}
 
 <article>
-    {% comment %}
-        Le début contient les informations principales: titre, date
-    {% endcomment %}
     {% if display in "in list by day" %}
-        {% if display == "in list" %}<h2>{% else %}<h3>{% endif %}
-            {% if not event.end_day and event.start_time %}{{ event.start_time }}{% endif %}
+    {% if display == "in list by day" and event|can_show_start_time %}
+        <article class='ephemeris-hour'>
+            {% if event.start_time %}
+            {% if display == "in list" %}<footer>{% endif %}
+                <span class="large">{{ event.start_time }}</span>
+            {% if display == "in list" %}</footer>{% endif %}
+        {% endif %}
+        </article>
+    {% endif %}
+    {% if display == "in list" %}
+        {% include "agenda_culturel/ephemeris-inc.html" with event=event %}
+    {% endif %}
+    {% if event.location %}<hgroup>{% endif %}
+            {% if display == "in list" %}<h2>{% else %}<h3>{% endif %}
             <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
             {% if display == "in list" %}</h2>{% else %}</h3>{% endif %}
-        {% if event.end_day %}<p><em>Cet événement dure du {{ event.start_day |date:"l j F" }} au {{ event.end_day |date:"l j F" }}</em></p>{% endif %}
+    {% if event.location %}
+    {% if display == "in list" %}<h3>{% else %}<h4>{% endif %}
+        <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <use href="{% static 'images/feather-sprite.svg' %}#map-pin" />
+        </svg>
+        {{ event.location }}
+        {% if display == "in list" %}</h3>{% else %}</h4>{% endif %}
+    </hgroup>
+    {% endif %}
+        {% if event|need_complete_display:display %}<p>
+            <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#calendar" />
+            </svg>
+    
+            <em>{% if event.end_day %}Cet événement dure du {% else %}Cet événement a lieu le{% endif %}
+                {% include "agenda_culturel/date-times-inc.html" with event=event %}
+            </em></p>
+        {% endif %}
     {% else %}
     <header>
+        {% include "agenda_culturel/ephemeris-inc.html" with event=event %}
         <h1>{{ event.title }}</h1>
-        <ul>
-            <li>Début&nbsp;: {{ event.start_day }} {% if event.start_time %} à {{ event.start_time }}{% endif %}</li>
-            {% if event.end_day or event.end_time %}
-            <li>Fin&nbsp;: 
-            {% if event.end_day %}{{ event.end_day }}{% endif %}
-            {% if event.end_time %}{{ event.end_time }}{% endif %}
-            </li>
-            {% endif %}
-        </ul>    
+        <p>
+            <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#map-pin" />
+            </svg>
+            {{ event.location }}
+        </p>
+        <p><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <use href="{% static 'images/feather-sprite.svg' %}#calendar" />
+        </svg>
+            {% if event.end_day %}du{% else %}le{% endif %}
+            {% include "agenda_culturel/date-times-inc.html" with event=event %}
+        </p>
     </header>
     {% endif %}
 
     {% comment %}
     manque encore: 
-    * location,
     * image, image_alt
-    * reference_urls
     {% endcomment %}
 
     {% comment %}
@@ -74,7 +104,7 @@
     <p>Cet événement est proposé par&nbsp;:
     {% endif %} 
     {% for eurl in event.reference_urls %}
-    <a href="{{ eurl }}">{{ eurl }}</a>{% if not forloop.last %}, {% endif %}
+    <a href="{{ eurl }}">{{ eurl|hostname }}</a>{% if not forloop.last %}, {% endif %}
     {% endfor %}
     </p>
 {% else %}

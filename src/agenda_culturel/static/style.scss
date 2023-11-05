@@ -98,3 +98,37 @@ ul {
 span.small-cat {
     cursor: default;
 }
+
+svg {
+    vertical-align: middle;
+}
+
+.ephemeris {
+    float: left;
+    font-size: 110%;
+    padding: 0.8em 0;
+    margin: 0 1em 0 0;
+    text-align: center;
+    width: 7em;
+
+    .large {
+        font-size: 140%;
+        font-weight: bold;
+    }
+
+    footer {
+        font-size: 140%;
+        padding: 0.3em;
+        margin: .6em 0 -0.8em 0;
+        font-weight: bold;
+        color: var(--primary);
+    }
+}
+
+.ephemeris-hour {
+    @extend .ephemeris;
+    padding: 1.5em 0.1em;
+    width: 5em;
+    font-weight: bold;
+}
+

@@ -1,0 +1,8 @@
+{{ event.start_day }} 
+{% if event.start_time %} {% if not event.end_day %}{% if event.end_time %}de{% else %}à{% endif %}{% endif %}
+    {{ event.start_time }}
+{% endif %}
+{% if event.end_day %}
+    au {% if event.end_day %}{{ event.end_day }}{% endif %}
+{% endif %}
+{% if event.end_time %} {% if not event.end_day %}jusqu'à{% endif %} {{ event.end_time }}{% endif %}

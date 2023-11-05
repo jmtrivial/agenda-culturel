@@ -1,0 +1,23 @@
+<article class='ephemeris'>
+    {% if not event.end_day or event.start_day == event.end_day %}
+        {{ event.start_day |date:"l" }}<br />
+        <span class="large">{{ event.start_day |date:"j" }}</span><br />
+        {{ event.start_day |date:"F" }}
+        {% if event.start_time %}
+            <footer>
+                <span class="large">{{ event.start_time }}</span>
+            </footer>
+        {% endif %}
+    {% else %}
+     du
+     {{ event.start_day |date:"D" }}<br />
+     <span class="large">{{ event.start_day |date:"j" }} </span>
+     {% if event.start_day|date:"F" != event.end_day|date:"F" %}
+        {{ event.start_day |date:"F" }}
+     {% endif %}<br />
+     au 
+     {{ event.start_day |date:"D" }} <br />
+     <span class="large">{{ event.end_day |date:"j" }}</span><br />
+     {{ event.end_day |date:"F" }}
+    {% endif %}
+</article>
