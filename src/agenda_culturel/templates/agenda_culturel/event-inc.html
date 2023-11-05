@@ -66,6 +66,21 @@
         <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
         {% endfor %}
     </p>
+
+    {% if event.reference_urls %}
+    {% if display in "in list by day" %}
+    <p>Source{{ event.reference_urls|pluralize }}&nbsp;:
+    {% else %}
+    <p>Cet événement est proposé par&nbsp;:
+    {% endif %} 
+    {% for eurl in event.reference_urls %}
+    <a href="{{ eurl }}">{{ eurl }}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+    </p>
+{% else %}
+    <p><em>Cet événement est disponible uniquement sur les nuits énimagmatiques.</em></p>
+{% endif %}
+
     </footer>
 </article>
 
