@@ -64,7 +64,8 @@ def css_categories():
 
     for c in cats:
 
-        result += "a ." + c.css_class() + " {"
+        result += "a ." + c.css_class() + ","
+        result += "span ." + c.css_class() + " {"
         result += background_color_adjust_color(adjust_lightness_saturation(c.color, .2, 0.8), 0.8)
         result += "}"
 
@@ -76,7 +77,7 @@ def css_categories():
         result += background_color_adjust_color(c.color)
         result += "}"
 
-        result += ".selected:hover ." + c.css_class() + " {"
+        result += "a.selected:hover ." + c.css_class() + " {"
         result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.2, 1.2))
         result += "}"
 
@@ -88,6 +89,6 @@ def small_cat(category, url=None, contrast=True):
 
     class_contrast = " contrast" if contrast else ""
     if url is None:
-        return mark_safe('<span class="small-cat' + class_contrast +'" role="button"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</span>")
+        return mark_safe('<span class="small-cat' + class_contrast +' selected" role="button"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</span>")
     else:
-        return mark_safe('<a class="small-cat' + class_contrast +'" role="button" href="' + url + '"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</a>")
+        return mark_safe('<a class="small-cat' + class_contrast +' selected" role="button" href="' + url + '"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</a>")

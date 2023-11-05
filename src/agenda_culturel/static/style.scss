@@ -38,11 +38,15 @@ $primary-700: #008080;
     width: 1.2em;
     border-radius: 0.6em;
     display: inline-block;
-    color: $primary-500;
-    background: var(--secondary-inverse);
     vertical-align: middle;
     text-align: center;
     font-size: 80%;
+}
+
+
+.action {
+    color: $primary-500;
+    background: var(--secondary-inverse);
 }
 
 .cat {
@@ -50,9 +54,7 @@ $primary-700: #008080;
     margin-right: .2em;   
 }
 
-a:hover>.cat,
 a:hover>.action,
-span:hover>.cat,
 span:hover>.action {
     transition: color var(--transition);
     color: $primary-600;

@@ -3,6 +3,11 @@
 {% block title %}{{ object.title }}{% endblock %}
 
 
+{% block entete_header %}
+    {% css_categories %}
+{% endblock %}
+
+
 {% block content %}
 
 {% include "agenda_culturel/event-inc.html" with event=event %}

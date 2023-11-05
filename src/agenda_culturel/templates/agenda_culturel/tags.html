@@ -4,9 +4,7 @@
 
 {% load cat_extra %}
 
-
 {% block content %}
-
 <h1>Toutes les étiquettes</h1>
 <p>Liste de toutes les étiquettes utilisées par les événements référencés&nbsp;:</p>
 <div>
@@ -14,5 +12,4 @@
     <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>    
     {% endfor %}
 </div>
-
 {% endblock %}
