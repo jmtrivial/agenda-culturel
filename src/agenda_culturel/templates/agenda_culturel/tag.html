@@ -1,6 +1,6 @@
 {% extends "agenda_culturel/page.html" %}
 
-{% block title %}Étiquette {{ tag }}{% endblock %}
+{% block title %}Les événements {{ tag }}{% endblock %}
 
 {% load cat_extra %}
 
@@ -11,7 +11,7 @@
 
 
 {% block content %}
-<h1>Étiquette <em>{{ tag }}</em></h1>
+<h1>Les événements <em>{{ tag }}</em></h1>
 
 {% for event in events %}
 {% include "agenda_culturel/event-inc.html" with event=event display="in list" %}
