@@ -102,7 +102,7 @@ def tag_list(request):
 
 class EventDetailView(DetailView):
     model = Event
-    template_name = "agenda_culturel/event.html"
+    template_name = "agenda_culturel/page-event.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

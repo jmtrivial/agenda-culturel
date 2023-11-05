@@ -1,0 +1,67 @@
+{% load cat_extra %}
+
+
+<article>
+    {% comment %}
+        Le début contient les informations principales: titre, date
+    {% endcomment %}
+    {% if display in "in list by day" %}
+        {% if display == "in list" %}<h2>{% else %}<h3>{% endif %}
+            {% if not event.end_day and event.start_time %}{{ event.start_time }}{% endif %}
+            <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+            {% if display == "in list" %}</h2>{% else %}</h3>{% endif %}
+        {% if event.end_day %}<p><em>Cet événement dure du {{ event.start_day |date:"l j F" }} au {{ event.end_day |date:"l j F" }}</em></p>{% endif %}
+    {% else %}
+    <header>
+        <h1>{{ event.title }}</h1>
+        <ul>
+            <li>Début&nbsp;: {{ event.start_day }} {% if event.start_time %} à {{ event.start_time }}{% endif %}</li>
+            {% if event.end_day or event.end_time %}
+            <li>Fin&nbsp;: 
+            {% if event.end_day %}{{ event.end_day }}{% endif %}
+            {% if event.end_time %}{{ event.end_time }}{% endif %}
+            </li>
+            {% endif %}
+        </ul>    
+    </header>
+    {% endif %}
+
+
+
+
+    {% comment %}
+    On affiche le corps du message avec plus ou moins de longueur
+    {% endcomment %}
+    {% if display in "in list by day" %}
+        <p>{{ event.description |truncatewords:20 }}</p>
+    {% else %}
+        <p>{{ event.description }}</p>
+    {% endif %}
+
+
+
+
+    {% comment %}
+    On affiche le pied qui contient les informations de tags, catégories, etc
+    {% endcomment %}
+<footer>
+    <p>
+    {% if mode %}
+        {% if category %}
+            {{ event.category | small_cat }}
+        {% else %}
+            {% url 'view_mode_cat' selected_mode.name event.category.pk as url_cat %}
+            {{ event.category | small_cat:url_cat }}
+        {% endif %}
+    {% else %}
+        {{ event.category | small_cat }}
+    {% endif %}
+    </p>
+    <p>
+        {% for tag in event.tags %}
+        <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
+        {% endfor %}
+    </p>
+    </footer>
+</article>
+

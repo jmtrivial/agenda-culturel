@@ -24,6 +24,9 @@ $primary-700: #008080;
         --typography-spacing-vertical: 0.6rem;
         --font-size: 1.3rem;
     }
+    p {
+        --typography-spacing-vertical: 0.6rem;
+    }
 }
 
 
@@ -84,4 +87,12 @@ body>nav {
     @extend .outline;
     font-size: 90%;
     padding: 0.15em 0.4em 0.3em 0.4em;
+}
+
+ul {
+    margin-left: 0.5em;
+}
+
+span.small-cat {
+    cursor: default;
 }

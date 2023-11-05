@@ -1,0 +1,10 @@
+{% extends "agenda_culturel/page.html" %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+
+{% block content %}
+
+{% include "agenda_culturel/event-inc.html" with event=event %}
+
+{% endblock %}
