@@ -116,10 +116,12 @@
         <p><em>Cet événement est disponible uniquement sur les nuits énimagmatiques.</em></p>
     {% endif %}
     </div>
+    {% if user.is_authenticated %}
     <div class="buttons">
         <a href="{% url 'edit_event' event.id %}" role="button">éditer</a>
         <a href="{% url 'delete_event' event.id %}" role="button">supprimer</a>
     </div>
+    {% endif %}
     </footer>
 </article>
 
