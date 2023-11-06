@@ -99,6 +99,14 @@ class Event(models.Model):
         verbose_name = _('Event')
         verbose_name_plural = _('Events')
 
+    def get_all_tags():
+        tags = list(Event.objects.values_list('tags', flat = True))
+        uniq_tags = set()
+        for t in tags:
+            uniq_tags = uniq_tags | set(t)
+        return list(uniq_tags)
+
+
 
 class EventSubmissionForm(models.Model):
     url = models.URLField(max_length=512, verbose_name=_('URL'), help_text=_("URL where this event can be found."))

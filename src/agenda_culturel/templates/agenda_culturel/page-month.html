@@ -25,16 +25,19 @@
  {% block content %}
  <h1>Événements de {{ calendar.firstdate | date:"F o" }}</h1>
 
+ {% include "agenda_culturel/filter-inc.html" with filter=filter %}
+
+
  <article>
     <header>
         <div class="navigation">
             <div>
-            <a role="button" href="{% url 'month_view' calendar.previous_month.year calendar.previous_month.month %}"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a role="button" href="{% url 'month_view' calendar.previous_month.year calendar.previous_month.month %}{{ filter.get_url }}"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <use href="{% static 'images/feather-sprite.svg' %}#chevron-left" />
             </svg> précédent</a>
             </div>
             <div class="right">
-            <a role="button" href="{% url 'month_view' calendar.next_month.year calendar.next_month.month %}">suivant <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a role="button" href="{% url 'month_view' calendar.next_month.year calendar.next_month.month %}{{ filter.get_url }}">suivant <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
             </svg></a>
             </div>
@@ -44,15 +47,15 @@
         <div class="grid">
         {% for d in calendar.calendar_days_list %}
         {% if forloop.counter0|divisibleby:7 and not forloop.first %}</div><div class="grid">{% endif %}
-        {% include "agenda_culturel/day-inc.html" with day=d resume=1 fixed_style=calendar.all_in_past %}
+        {% include "agenda_culturel/day-inc.html" with day=d resume=1 fixed_style=calendar.all_in_past filter=filter %}
         {% endfor %}
         </div>
     </div>
 
     <footer>
         {% if calendar.today_in_calendar %}
-        <a role="button" href="{% url 'aujourdhui' %}">Aujourd'hui</a>
-        <a role="button" href="{% url 'cette_semaine' %}">Cette semaine</a>
+        <a role="button" href="{% url 'aujourdhui' %}{{ filter.get_url }}">Aujourd'hui</a>
+        <a role="button" href="{% url 'cette_semaine' %}{{ filter.get_url }}">Cette semaine</a>
         {% endif %}
         </footer>
 </article>

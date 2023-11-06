@@ -1,0 +1,12 @@
+<article>
+    <details>
+<summary role="button">Filtres</summary>
+<section>
+<form method="get" class="form django-form">
+                {% csrf_token %}<br />
+                {{ filter.form }}<br />
+                <button type="submit">Filtrer</button><br />
+</form>
+</section>
+</details>
+</article>

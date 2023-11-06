@@ -15,7 +15,7 @@
         </article>
     {% endif %}
     {% if display == "in list" %}
-        {% include "agenda_culturel/ephemeris-inc.html" with event=event %}
+        {% include "agenda_culturel/ephemeris-inc.html" with event=event filter=filter %}
     {% endif %}
     {{ event.category | small_cat }}
     {% if event.location %}<hgroup>{% endif %}
@@ -67,7 +67,7 @@
 
     {% else %}
     <header>
-        {% include "agenda_culturel/ephemeris-inc.html" with event=event %}
+        {% include "agenda_culturel/ephemeris-inc.html" with event=event filter=filter %}
         {{ event.category | small_cat }}
         <h1>{{ event.title }}</h1>
         <p><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

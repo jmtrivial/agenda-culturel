@@ -59,10 +59,11 @@ class CalendarDay:
 
 class CalendarList:
 
-    def __init__(self, firstdate, lastdate):
+    def __init__(self, firstdate, lastdate, filter):
         self.firstdate = firstdate
         self.lastdate = lastdate
         self.now = date.today()
+        self.filter = filter
 
         # start the first day of the first week
         self.c_firstdate = firstdate + timedelta(days=-firstdate.weekday())
@@ -84,7 +85,11 @@ class CalendarList:
         return self.lastdate < self.now
 
     def fill_calendar_days(self):
-        self.events = Event.objects.filter(start_day__lte=self.c_lastdate, start_day__gte=self.c_firstdate).order_by("start_day", "start_time")
+        if self.filter is None:
+            qs = Event.objects()
+        else:
+            qs = self.filter.qs
+        self.events = qs.filter(start_day__lte=self.c_lastdate, start_day__gte=self.c_firstdate).order_by("start_day", "start_time")
 
         for e in self.events:
             for d in daterange(e.start_day, e.end_day):
@@ -112,7 +117,7 @@ class CalendarList:
 
 class CalendarMonth(CalendarList):
 
-    def __init__(self, year, month):
+    def __init__(self, year, month, filter):
         self.year = year
         self.month = month
         r = calendar.monthrange(year, month)
@@ -120,7 +125,7 @@ class CalendarMonth(CalendarList):
         first = date(year, month, r[0])
         last = date(year, month, r[1])
 
-        super().__init__(first, last)
+        super().__init__(first, last, filter)
 
     def get_month_name(self):
         return self.firstdate.strftime("%B")
@@ -134,20 +139,50 @@ class CalendarMonth(CalendarList):
 
 class CalendarWeek(CalendarList):
 
-    def __init__(self, year, week):
+    def __init__(self, year, week, filter):
         self.year = year
         self.week = week
 
         first = date.fromisocalendar(self.year, self.week, 1)
         last = date.fromisocalendar(self.year, self.week, 7)
 
-        super().__init__(first, last)
+        super().__init__(first, last, filter)
 
     def next_week(self):
         return self.firstdate + timedelta(days=7)
 
     def previous_week(self):
         return self.firstdate + timedelta(days=-7)
+
+
+class EventFilter(django_filters.FilterSet):
+    tags = django_filters.MultipleChoiceFilter(choices=[(t, t) for t in Event.get_all_tags()], lookup_expr='in')
+    category = django_filters.ModelMultipleChoiceFilter(field_name="category__id", to_field_name='id', queryset=Category.objects.all())
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if len(args) > 0:
+            self.url = EventFilter.build_get_url(args[0])
+        else:
+            self.url = ""
+
+
+    class Meta:
+        model = Event
+        fields = ["category", "tags"]
+        field_labels = { 'category': "Catégories", "tags": "Étiquettes" }
+
+    def get_url(self):
+        return self.url
+
+    def build_get_url(get, first = "?"):
+        result = ""
+        for p in get:
+            if p in ["category", "tags"]:
+                for v in get.getlist(p):
+                    result += first if len(result) == 0 else "&"
+                    result += str(p) + "=" + str(v)
+        return result
 
 
 def home(request):
@@ -160,9 +195,13 @@ def month_view(request, year = None, month = None):
         year = now.year
     if month is None:
         month = now.month
-    cmonth = CalendarMonth(year, month)
 
-    context = {"year": year, "month": cmonth.get_month_name(), "calendar": cmonth}
+    filtering_url = EventFilter.build_get_url(request.GET)
+    filter = EventFilter(request.GET, queryset=Event.objects.all())
+    cmonth = CalendarMonth(year, month, filter)
+    
+
+    context = {"year": year, "month": cmonth.get_month_name(), "calendar": cmonth, "filter": filter }
     return render(request, 'agenda_culturel/page-month.html', context)
 
 
@@ -173,9 +212,11 @@ def week_view(request, year = None, week = None):
     if week is None:
         week = now.isocalendar()[1]
 
-    cweek = CalendarWeek(year, week)
+    filtering_url = EventFilter.build_get_url(request.GET)
+    filter = EventFilter(request.GET, queryset=Event.objects.all())
+    cweek = CalendarWeek(year, week, filter)
 
-    context = {"year": year, "week": week, "calendar": cweek}
+    context = {"year": year, "week": week, "calendar": cweek, "filter": filter }
     return render(request, 'agenda_culturel/page-week.html', context)
 
 
@@ -190,9 +231,12 @@ def day_view(request, year = None, month = None, day = None):
 
     day = date(year, month, day)
 
-    events = Event.objects.filter(start_day__lte=day, start_day__gte=day).order_by("start_day", "start_time")
-    # TODO
-    context = {"day": day, "events": events}
+    filtering_url = EventFilter.build_get_url(request.GET)
+    
+    filter = EventFilter(request.GET, Event.objects.all())
+    events = filter.qs.filter(start_day__lte=day, start_day__gte=day).order_by("start_day", "start_time")
+
+    context = {"day": day, "events": events, "filter": filter}
     return render(request, 'agenda_culturel/page-day.html', context)
 
 
@@ -206,12 +250,8 @@ def tag_list(request):
         nfkd_form = unicodedata.normalize('NFKD', input_str)
         return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
 
-
-    tags = list(Event.objects.values_list('tags', flat = True))
-    uniq_tags = set()
-    for t in tags:
-        uniq_tags = uniq_tags | set(t)
-    context = {"tags": sorted(list(uniq_tags), key=lambda x: remove_accents(x).lower())}
+    tags = Event.get_all_tags()    
+    context = {"tags": sorted(tags, key=lambda x: remove_accents(x).lower())}
     return render(request, 'agenda_culturel/tags.html', context)
 
 
@@ -258,7 +298,8 @@ class EventSubmissionFormView(FormView):
 
 
 
-class EventFilter(django_filters.FilterSet):
+
+class EventFilterAdmin(django_filters.FilterSet):
     tags = django_filters.CharFilter(lookup_expr='icontains')
 
 
@@ -280,7 +321,7 @@ class EventFilter(django_filters.FilterSet):
 
 @login_required(login_url="/accounts/login/")
 def event_list(request):
-    filter = EventFilter(request.GET, queryset=Event.objects.all())
+    filter = EventFilterAdmin(request.GET, queryset=Event.objects.all())
     paginator = Paginator(filter.qs, 10)
     page = request.GET.get('page')
 
