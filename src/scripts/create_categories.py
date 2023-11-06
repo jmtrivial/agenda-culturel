@@ -6,15 +6,15 @@ def run():
     # divers
 
     categories = [
-        ("Théâtre", "Au théâtre", "THÉ"),
-        ("Concert", "Concerts", "CCR"),
-        ("Danse", "En danse", "DSE"),
-        ("Arts du spectacle", None, "SPE"),
-        ("Jeune public", "Pour le jeune public", "JEP"),
-        ("Exposition", "Expositions", "EXP"),
-        ("Conférence", "Conférences", "CNF"),
-        ("Nature", "Événements nature", "NTR"),
-        ("Autre", "Autres événements", "ATR")
+        ("Théâtre", "Au théâtre", "T"),
+        ("Concert", "Concerts", "C"),
+        ("Danse", "Danse", "D"),
+        ("Arts du spectacle", None, "S"),
+        ("Jeune public", "Pour le jeune public", "J"),
+        ("Exposition", "Expositions", "E"),
+        ("Conférence", "Conférences", "C"),
+        ("Nature", "Événements nature", "N"),
+        ("Autre", "Autres événements", "A")
     ]
 
     if len(Category.objects.all()) == 0:

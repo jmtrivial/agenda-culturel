@@ -35,10 +35,11 @@ def run():
 
         }
         if random.randint(0, 1) == 1:
-            fields["end_day"] = (sday + timedelta(days=random.randint(0, 6))).date()
-        if random.randint(0, 1) == 1:
             fields["start_time"] = random_hour()
-        if random.randint(0, 1) == 1:
-            fields["end_time"] = random_hour()
+        else:
+            if random.randint(0, 5) == 1:
+                fields["end_day"] = (sday + timedelta(days=random.randint(0, 6))).date()
+                if random.randint(0, 1) == 1:
+                    fields["end_time"] = random_hour()
         faker.create(fields)
 
