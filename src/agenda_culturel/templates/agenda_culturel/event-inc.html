@@ -3,12 +3,6 @@
 {% load utils_extra %}
 {% load event_extra %}
 
-{% comment %}
-    TODO: 
-    * utiliser flex plutôt que float pour l'image et pour la date
-    * gérer le flex des boutons dans le cas de petits écrans 
-{% endcomment %}
-
 <article>
     {% if display in "in list by day" %}
     {% if display == "in list by day" and event|can_show_start_time %}
