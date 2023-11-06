@@ -156,7 +156,7 @@ class CalendarWeek(CalendarList):
 
 
 class EventFilter(django_filters.FilterSet):
-    tags = django_filters.MultipleChoiceFilter(choices=[(t, t) for t in Event.get_all_tags()], lookup_expr='in')
+    tags = django_filters.MultipleChoiceFilter(choices=[(t, t) for t in Event.get_all_tags()], lookup_expr='icontains', field_name="tags")
     category = django_filters.ModelMultipleChoiceFilter(field_name="category__id", to_field_name='id', queryset=Category.objects.all())
     
     def __init__(self, *args, **kwargs):
