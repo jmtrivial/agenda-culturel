@@ -58,9 +58,9 @@
     {% endif %}
 
     <article>
-        <p>Voir aussi tous les événements 
-            <a href="{% url 'week_view' day.year day|week %}">de la semaine 
-                du {{ day|first_day_of_this_week }}
-                au {{ day|last_day_of_this_week }}</a>.</p>
+            {% if calendar.today_in_calendar %}
+            <a role="button" href="{% url 'aujourdhui' %}">Aujourd'hui</a>
+            {% endif %}
+            <a role="button" href="{% url 'week_view' day.year day|week %}">Toute la semaine</a>
     </article>
  {% endblock %}
