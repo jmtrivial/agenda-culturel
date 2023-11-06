@@ -141,6 +141,11 @@
         <div class="buttons">
             <a href="{% url 'edit_event' event.id %}" role="button">éditer</a>
             <a href="{% url 'delete_event' event.id %}" role="button">supprimer</a>
+            {% if display != "single" %}
+            <a href="{{ event.get_absolute_url }}" role="button">Voir l'événement <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
+            </svg></a>
+            {% endif %}
         </div>
         {% endif %}
         </footer>
