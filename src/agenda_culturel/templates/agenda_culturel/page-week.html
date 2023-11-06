@@ -34,14 +34,14 @@
 
 <article>
     <header>
-        <div class="grid navigation">
+        <div class="navigation">
             <div>
             <a role="button" href="{% url 'week_view' calendar.previous_week.year calendar.previous_week|week %}"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <use href="{% static 'images/feather-sprite.svg' %}#chevron-left" />
-            </svg> Semaine précédente</a>
+            </svg> précédente</a>
             </div>
             <div class="right">
-            <a role="button" href="{% url 'week_view' calendar.next_week.year calendar.next_week|week %}">Semaine suivante <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a role="button" href="{% url 'week_view' calendar.next_week.year calendar.next_week|week %}">suivante <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
             </svg></a>
             </div>
@@ -49,7 +49,7 @@
     </header>
     <div class="grid" id="calendar">
     {% for d in calendar.calendar_days_list %}
-    {% include "agenda_culturel/day-inc.html" with day=d %}
+    {% include "agenda_culturel/day-inc.html" with day=d fixed_style=calendar.all_in_past %}
     {% endfor %}
     </div>
 

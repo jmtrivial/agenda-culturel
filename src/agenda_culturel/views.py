@@ -39,12 +39,16 @@ class CalendarDay:
         self.date = d
         now = date.today()
         self.in_past = d < now
+        self.today = d == now
         self.events = []
+        self.on_requested_interval = on_requested_interval
 
         self.events_by_category = {}
 
     def is_in_past(self):
-        return in_past
+        return self.in_past
+    def is_today(self):
+        return self.today
 
     def add_event(self, event):
         self.events.append(event)
@@ -71,6 +75,12 @@ class CalendarList:
         # fill CalendarDays with events
         self.fill_calendar_days()
 
+
+    def all_in_past(self):
+        for d in self.calendar_days.values():
+            if not d.is_in_past():
+                return False
+        return True
 
     def fill_calendar_days(self):
         self.events = Event.objects.filter(start_day__lte=self.c_lastdate, start_day__gte=self.c_firstdate).order_by("start_day", "start_time")

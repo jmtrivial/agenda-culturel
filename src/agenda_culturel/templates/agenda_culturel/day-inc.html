@@ -1,12 +1,15 @@
 
 {% load cat_extra %}
+{% load utils_extra %}
 {% load static %}
 
 {% with day.date|date:"Y-m-d" as daytag %}
 {% with "date-"|add:daytag as daytag %}
 
-<article class="day" id="{{ daytag }}">
+<article class="day{{ day|calendar_classes:fixed_style }}" id="{{ daytag }}">
+    <header>
     <h2><a href="{% url 'day_view' day.date.year day.date.month day.date.day %}">{{ day.date | date:"l j" }}</a></h2>
+    </header>
     {% if day.events %}
     {% if resume %}
         <ul>

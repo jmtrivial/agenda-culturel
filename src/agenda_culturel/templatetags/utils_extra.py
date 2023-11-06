@@ -32,3 +32,15 @@ def first_day_of_this_week(d):
 @register.filter
 def last_day_of_this_week(d):
     return date.fromisocalendar(d.year, week(d), 7)    
+
+@register.filter
+def calendar_classes(d, fixed_style):
+    result = ""
+    if not fixed_style:
+        if d.is_in_past():
+            result += " past"
+        if d.is_today():
+            result += " today"
+    if not d.on_requested_interval:
+        result += " other_month"
+    return result

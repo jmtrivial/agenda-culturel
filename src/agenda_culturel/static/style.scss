@@ -27,6 +27,11 @@ $primary-700: #008080;
     p {
         --typography-spacing-vertical: 0.6rem;
     }
+    --transition: 0.1s ease-in-out;
+
+    // Modal (<dialog>)
+    --modal-overlay-backdrop-filter: blur(0.05rem);
+  
 }
 
 
@@ -151,7 +156,7 @@ footer {
 .infos-and-buttons {
     display: flex;
     flex-direction: row;
-    align-items: stretch
+    align-items: stretch;
 }
 
 .infos-and-buttons .infos {
@@ -164,11 +169,16 @@ footer {
 
 article.day {
     margin: 0;
-    padding: 0.3em;
+    padding: 0 0 0.3em 0;
+}
+
+article.day>header {
+    margin: 0;
+    padding: 0.3em 0.3em 0 0.3em;
 }
 
 article.day>ul {
-    margin: 0;
+    margin: 0 0.2em .8em 0.2em;
     padding: 0;
 
     >li {
@@ -182,4 +192,28 @@ article.day>ul {
 }
 .navigation {
     margin: 1em 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    div {
+        flex: auto;
+    }
+}
+
+
+.day.today>header {
+    background: rgba(255, 0, 140, 0.15);
+}
+
+.day.past {
+    opacity: 0.5;
+}
+
+.day.other_month {
+    opacity: 0.2;
+}
+
+.day.past:hover,
+.day.other_month:hover {
+    opacity: 1;
 }

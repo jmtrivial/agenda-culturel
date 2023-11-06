@@ -29,17 +29,17 @@
 
 
 <article>
-        <div class="grid navigation">
+        <div class="navigation">
             <div>
             {% with day|shift_day:-1 as pred_day %}
             <a role="button" href="{% url 'day_view' pred_day.year pred_day.month pred_day.day %}"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <use href="{% static 'images/feather-sprite.svg' %}#chevron-left" />
-            </svg> Jour précédent</a>
+            </svg> précédent</a>
             {% endwith %}
             </div>
             <div class="right">
             {% with day|shift_day:1 as next_day %}
-                <a role="button" href="{% url 'day_view' next_day.year next_day.month next_day.day %}">Jour suivant <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <a role="button" href="{% url 'day_view' next_day.year next_day.month next_day.day %}">suivant <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
             </svg></a>
             {% endwith %}
