@@ -8,7 +8,7 @@
 
 <article class="day{{ day|calendar_classes:fixed_style }}" id="{{ daytag }}">
     <header>
-    <h2><a href="{% url 'day_view' day.date.year day.date.month day.date.day %}">{{ day.date | date:"l j" }}</a></h2>
+    <h2><a href="{{ day.date | url_day }}">{{ day.date | date:"l j" }}</a></h2>
     </header>
     {% if day.events %}
     {% if resume %}
@@ -38,7 +38,7 @@
                         </ul>
                         <footer>
                             <div class="buttons">
-                                <a href="{% url 'day_view' day.date.year day.date.month day.date.day %}" role="button">Voir la journée <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <a href="{{ day.date | url_day }}" role="button">Voir la journée <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
                                 </svg></a>
                             </div>
