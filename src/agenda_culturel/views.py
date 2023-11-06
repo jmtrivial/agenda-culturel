@@ -76,6 +76,12 @@ class CalendarList:
         self.fill_calendar_days()
 
 
+    def today_in_calendar(self):
+        for d in self.calendar_days.values():
+            if not d.is_today():
+                return True
+        return False
+
     def all_in_past(self):
         for d in self.calendar_days.values():
             if not d.is_in_past():
@@ -151,41 +157,40 @@ class CalendarWeek(CalendarList):
 
 def home(request):
     return week_view(request)
-    #return month_view(request, now.year, now.month)
 
 def month_view(request, year = None, month = None):
     # TODO: filter by category, tag
     now = date.today()
-    if year == None:
+    if year is None:
         year = now.year
-    if month == None:
+    if month is None:
         month = now.month
     cmonth = CalendarMonth(year, month)
 
-    context = {"year": year, "month": cmonth.get_month_name(), "calendar": cmonth }
+    context = {"year": year, "month": cmonth.get_month_name(), "calendar": cmonth}
     return render(request, 'agenda_culturel/page-month.html', context)
 
 
 def week_view(request, year = None, week = None):
     now = date.today()
-    if year == None:
+    if year is None:
         year = now.year
-    if week == None:
+    if week is None:
         week = now.isocalendar()[1]
 
     cweek = CalendarWeek(year, week)
 
-    context = {"year": year, "week": week, "calendar": cweek }
+    context = {"year": year, "week": week, "calendar": cweek}
     return render(request, 'agenda_culturel/page-week.html', context)
 
 
 def day_view(request, year = None, month = None, day = None):
     now = date.today()
-    if year == None:
+    if year is None:
         year = now.year
-    if month == None:
+    if month is None:
         month = now.month
-    if day == None:
+    if day is None:
         day = now.day
 
     day = date(year, month, day)

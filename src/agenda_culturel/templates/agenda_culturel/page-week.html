@@ -30,8 +30,6 @@
 </hgroup>
  
 
-
-
 <article>
     <header>
         <div class="navigation">
@@ -54,11 +52,14 @@
     </div>
 
     <footer>
-        <p>Voir aussi tous les événements du mois de 
-            <a href="{% url 'month_view' calendar.firstdate.year calendar.firstdate.month %}">{{ calendar.firstdate | date:"F o" }}</a>{% if calendar.firstdate.month != calendar.lastdate.month %}
-            ou tous les événements du mois de <a href="{% url 'month_view' calendar.lastdate.year calendar.lastdate.month %}">{{ calendar.lastdate | date:"F o" }}</a>
-            {% endif %}.</p>
-            </footer>
+        {% if calendar.today_in_calendar %}
+        <a role="button" href="{% url 'aujourdhui' %}">Aujourd'hui</a>
+        {% endif %}
+        <a role="button" href="{% url 'month_view' calendar.firstdate.year calendar.firstdate.month %}">{{ calendar.firstdate | date:"F o" }}</a>
+        {% if calendar.firstdate.month != calendar.lastdate.month %}
+            <a role="button" href="{% url 'month_view' calendar.lastdate.year calendar.lastdate.month %}">{{ calendar.lastdate | date:"F o" }}</a>
+            {% endif %}
+        </footer>
 </article>
 
 

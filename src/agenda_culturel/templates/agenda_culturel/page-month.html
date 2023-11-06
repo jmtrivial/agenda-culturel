@@ -49,6 +49,12 @@
         </div>
     </div>
 
+    <footer>
+        {% if calendar.today_in_calendar %}
+        <a role="button" href="{% url 'aujourdhui' %}">Aujourd'hui</a>
+        <a role="button" href="{% url 'cette_semaine' %}">Cette semaine</a>
+        {% endif %}
+        </footer>
 </article>
 
  
