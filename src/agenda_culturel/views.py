@@ -62,6 +62,7 @@ class CalendarList:
     def __init__(self, firstdate, lastdate):
         self.firstdate = firstdate
         self.lastdate = lastdate
+        self.now = date.today()
 
         # start the first day of the first week
         self.c_firstdate = firstdate + timedelta(days=-firstdate.weekday())
@@ -77,16 +78,10 @@ class CalendarList:
 
 
     def today_in_calendar(self):
-        for d in self.calendar_days.values():
-            if not d.is_today():
-                return True
-        return False
+        return self.firstdate <= self.now and self.lastdate >= self.now
 
     def all_in_past(self):
-        for d in self.calendar_days.values():
-            if not d.is_in_past():
-                return False
-        return True
+        return self.lastdate < self.now
 
     def fill_calendar_days(self):
         self.events = Event.objects.filter(start_day__lte=self.c_lastdate, start_day__gte=self.c_firstdate).order_by("start_day", "start_time")
