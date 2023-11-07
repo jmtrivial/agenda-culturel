@@ -13,7 +13,7 @@ from django.utils import timezone
 from enum import StrEnum
 from datetime import datetime, timedelta, date, time
 import calendar
-from django.db.models import Q
+from django.db.models import Q, F
 
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -248,7 +248,7 @@ def day_view(request, year = None, month = None, day = None):
     day = date(year, month, day)
     
     filter = EventFilter(request.GET, Event.objects.all())
-    events = filter.qs.filter(start_day__lte=day, start_day__gte=day).order_by("start_day", "start_time")
+    events = filter.qs.filter((Q(start_day__lte=day) & (Q(end_day__gte=day)) | Q(start_day=day))).order_by("start_day", F("start_time").desc(nulls_last=True))
 
     context = {"day": day, "events": events, "filter": filter}
     return render(request, 'agenda_culturel/page-day.html', context)
