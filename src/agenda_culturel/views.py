@@ -189,7 +189,6 @@ def home(request):
     return week_view(request)
 
 def month_view(request, year = None, month = None):
-    # TODO: filter by category, tag
     now = date.today()
     if year is None:
         year = now.year
