@@ -11,7 +11,7 @@ from .celery import create_event_from_submission
 from .models import Event, Category
 from django.utils import timezone
 from enum import StrEnum
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, time
 import calendar
 from django.db.models import Q
 
@@ -36,10 +36,12 @@ def daterange(start, end, step=timedelta(1)):
 
 
 class CalendarDay:
+    midnight = time(23, 59, 59)
 
     def __init__(self, d, on_requested_interval = True):
         self.date = d
         now = date.today()
+
         self.in_past = d < now
         self.today = d == now
         self.events = []
@@ -63,6 +65,9 @@ class CalendarDay:
                 self.events_by_category[event.category.name] = []
             self.events_by_category[event.category.name].append(event)
 
+    def filter_events(self):
+        self.events.sort(key=lambda e: CalendarDay.midnight if e.start_time is None else e.start_time)
+
 
 class CalendarList:
 
@@ -83,6 +88,10 @@ class CalendarList:
 
         # fill CalendarDays with events
         self.fill_calendar_days()
+
+        # finally, sort each CalendarDay
+        for i, c in self.calendar_days.items():
+            c.filter_events()
 
 
     def today_in_calendar(self):
