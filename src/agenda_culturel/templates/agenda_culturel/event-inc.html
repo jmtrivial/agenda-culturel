@@ -2,6 +2,7 @@
 {% load cat_extra %}
 {% load utils_extra %}
 {% load event_extra %}
+{% load tag_extra %}
 
 <article>
     {% if display in "in list by day" %}
@@ -101,7 +102,7 @@
     {% if display == "modal" %}
     <p>
         {% for tag in event.tags %}
-        <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
+        {{ tag | tag_button }}
         {% endfor %}
     </p>
 

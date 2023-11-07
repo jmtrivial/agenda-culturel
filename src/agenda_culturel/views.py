@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, FormView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import QueryDict
+
 
 from .forms import EventSubmissionModelForm
 from .celery import create_event_from_submission
@@ -164,12 +166,11 @@ class EventFilter(django_filters.FilterSet):
     tags = django_filters.MultipleChoiceFilter(choices=[(t, t) for t in Event.get_all_tags()], lookup_expr='icontains', field_name="tags")
     category = django_filters.ModelMultipleChoiceFilter(field_name="category__id", to_field_name='id', queryset=Category.objects.all())
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if len(args) > 0:
-            self.url = EventFilter.build_get_url(args[0])
-        else:
-            self.url = ""
+
+
+    def filter_queryset(self, queryset):
+        # TODO
+        return super().filter_queryset(queryset)
 
 
     class Meta:
@@ -178,16 +179,20 @@ class EventFilter(django_filters.FilterSet):
         field_labels = { 'category': "Catégories", "tags": "Étiquettes" }
 
     def get_url(self):
-        return self.url
+        if isinstance(self.form.data, QueryDict):
+            return self.form.data.urlencode() 
+        else:
+            print(self.form.data)
+            return ""
 
-    def build_get_url(get, first = "?"):
-        result = ""
-        for p in get:
-            if p in EventFilter.Meta.fields:
-                for v in get.getlist(p):
-                    result += first if len(result) == 0 else "&"
-                    result += str(p) + "=" + str(v)
-        return result
+    def get_categories(self):
+        return self.form.cleaned_data["category"]
+
+    def get_tags(self):
+        return self.form.cleaned_data["tags"]
+
+    def is_active(self):
+        return len(self.form.cleaned_data["category"]) != 0 or len(self.form.cleaned_data["tags"]) != 0
 
 
 def home(request):
@@ -200,7 +205,6 @@ def month_view(request, year = None, month = None):
     if month is None:
         month = now.month
 
-    filtering_url = EventFilter.build_get_url(request.GET)
     filter = EventFilter(request.GET, queryset=Event.objects.all())
     cmonth = CalendarMonth(year, month, filter)
     
@@ -216,7 +220,6 @@ def week_view(request, year = None, week = None):
     if week is None:
         week = now.isocalendar()[1]
 
-    filtering_url = EventFilter.build_get_url(request.GET)
     filter = EventFilter(request.GET, queryset=Event.objects.all())
     cweek = CalendarWeek(year, week, filter)
 
@@ -234,8 +237,6 @@ def day_view(request, year = None, month = None, day = None):
         day = now.day
 
     day = date(year, month, day)
-
-    filtering_url = EventFilter.build_get_url(request.GET)
     
     filter = EventFilter(request.GET, Event.objects.all())
     events = filter.qs.filter(start_day__lte=day, start_day__gte=day).order_by("start_day", "start_time")

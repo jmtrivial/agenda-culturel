@@ -85,7 +85,7 @@ def css_categories():
     return mark_safe(result)
 
 @register.filter
-def small_cat(category, url=None, contrast=True):
+def small_cat(category, url=None, contrast=True, close_url=None):
 
     name = Category.default_name if category is None else category.name
     css_class = Category.default_css_class if category is None else category.css_class()
@@ -102,3 +102,7 @@ def circle_cat(category):
         return mark_safe('<span class="cat ' + Category.default_css_class + '" data-tooltip="' + Category.default_name + '"></span>')
     else:
         return mark_safe('<span class="cat ' + category.css_class() + '" data-tooltip="' + category.name + '"></span>')
+
+@register.filter
+def small_cat_close(category, close_url=None, contrast=True):
+    return small_cat(category, close_url=close_url, contrast=contrast)

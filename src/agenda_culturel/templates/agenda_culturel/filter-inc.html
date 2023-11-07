@@ -1,6 +1,21 @@
+{% load cat_extra %}
+{% load tag_extra %}
+
 <article>
     <details>
-<summary role="button">Filtres</summary>
+<summary role="button" class="contrast outline">
+    {% if filter.is_active %}
+        Filtres&nbsp;: 
+        {% for c in filter.get_categories %}
+            {{ c | small_cat }}
+        {% endfor %}
+        {% for t in filter.get_tags %}
+            {{ t | tag_button }}
+        {% endfor %}
+    {% else %}
+        Filtrer
+    {% endif %}
+</summary>
 <section>
 <form method="get" class="form django-form">
                 {% csrf_token %}<br />

@@ -36,12 +36,12 @@
     <header>
         <div class="navigation">
             <div>
-            <a role="button" href="{% url 'week_view' calendar.previous_week.year calendar.previous_week|week %}{{ filter.get_url }}"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a role="button" href="{% url 'week_view' calendar.previous_week.year calendar.previous_week|week %}?{{ filter.get_url }}"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <use href="{% static 'images/feather-sprite.svg' %}#chevron-left" />
             </svg> précédente</a>
             </div>
             <div class="right">
-            <a role="button" href="{% url 'week_view' calendar.next_week.year calendar.next_week|week %}{{ filter.get_url }}">suivante <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a role="button" href="{% url 'week_view' calendar.next_week.year calendar.next_week|week %}?{{ filter.get_url }}">suivante <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
             </svg></a>
             </div>
@@ -55,11 +55,11 @@
 
     <footer>
         {% if calendar.today_in_calendar %}
-        <a role="button" href="{% url 'aujourdhui' %}{{ filter.get_url }}">Aujourd'hui</a>
+        <a role="button" href="{% url 'aujourdhui' %}?{{ filter.get_url }}">Aujourd'hui</a>
         {% endif %}
-        <a role="button" href="{% url 'month_view' calendar.firstdate.year calendar.firstdate.month %}{{ filter.get_url }}">{{ calendar.firstdate | date:"F o" }}</a>
+        <a role="button" href="{% url 'month_view' calendar.firstdate.year calendar.firstdate.month %}?{{ filter.get_url }}">{{ calendar.firstdate | date:"F o" }}</a>
         {% if calendar.firstdate.month != calendar.lastdate.month %}
-            <a role="button" href="{% url 'month_view' calendar.lastdate.year calendar.lastdate.month %}{{ filter.get_url }}">{{ calendar.lastdate | date:"F o" }}</a>
+            <a role="button" href="{% url 'month_view' calendar.lastdate.year calendar.lastdate.month %}?{{ filter.get_url }}">{{ calendar.lastdate | date:"F o" }}</a>
             {% endif %}
         </footer>
 </article>

@@ -3,7 +3,7 @@
 <article class='ephemeris'>
     {% if not event.end_day or event.start_day == event.end_day %}
         {{ event.start_day |date:"l" }}<br />
-        <a href="{{ event.start_day | url_day }}{{ filter.get_url }}"><span class="large">{{ event.start_day |date:"j" }}</span><br />
+        <a href="{{ event.start_day | url_day }}?{{ filter.get_url }}"><span class="large">{{ event.start_day |date:"j" }}</span><br />
         {{ event.start_day |date:"F" }}</a>
         {% if event.start_time %}
             <footer>
@@ -13,13 +13,13 @@
     {% else %}
      du
      {{ event.start_day |date:"D" }}<br />
-     <a href="{{ event.start_day | url_day }}{{ filter.get_url }}"><span class="large">{{ event.start_day |date:"j" }} </span>
+     <a href="{{ event.start_day | url_day }}?{{ filter.get_url }}"><span class="large">{{ event.start_day |date:"j" }} </span>
      {% if event.start_day|date:"F" != event.end_day|date:"F" %}
         {{ event.start_day |date:"F" }}
      {% endif %}</a><br />
      au 
      {{ event.start_day |date:"D" }} <br />
-     <a href="{{ event.end_day | url_day }}{{ filter.get_url }}"><span class="large">{{ event.end_day |date:"j" }}</span><br />
+     <a href="{{ event.end_day | url_day }}?{{ filter.get_url }}"><span class="large">{{ event.end_day |date:"j" }}</span><br />
      {{ event.end_day |date:"F" }}</a>
     {% endif %}
 </article>
