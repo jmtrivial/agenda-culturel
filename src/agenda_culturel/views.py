@@ -178,7 +178,7 @@ class EventFilter(django_filters.FilterSet):
     def build_get_url(get, first = "?"):
         result = ""
         for p in get:
-            if p in ["category", "tags"]:
+            if p in EventFilter.Meta.fields:
                 for v in get.getlist(p):
                     result += first if len(result) == 0 else "&"
                     result += str(p) + "=" + str(v)
