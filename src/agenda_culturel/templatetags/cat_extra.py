@@ -60,24 +60,25 @@ def background_color_adjust_color(color, alpha = 1):
 def css_categories():
     result = '<style type="text/css">'
     
-    cats = Category.objects.all()
+    cats = [{"color": c.color, "css_class": c.css_class()} for c in Category.objects.all()]
+    cats.append({"color": Category.default_color, "css_class": Category.default_css_class})
 
     for c in cats:
 
-        result += "." + c.css_class() + " {"
-        result += background_color_adjust_color(adjust_lightness_saturation(c.color, .2, 0.8), 0.8)
+        result += "." + c["css_class"] + " {"
+        result += background_color_adjust_color(adjust_lightness_saturation(c["color"], .2, 0.8), 0.8)
         result += "}"
 
-        result += "*:hover ." + c.css_class() + " {"
-        result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.02, 1.0))
+        result += "*:hover ." + c["css_class"] + " {"
+        result += background_color_adjust_color(adjust_lightness_saturation(c["color"], 0.02, 1.0))
         result += "}"
         
-        result += ".selected ." + c.css_class() + " {"
-        result += background_color_adjust_color(c.color)
+        result += ".selected ." + c["css_class"] + " {"
+        result += background_color_adjust_color(c["color"])
         result += "}"
 
-        result += "a.selected:hover ." + c.css_class() + " {"
-        result += background_color_adjust_color(adjust_lightness_saturation(c.color, 0.2, 1.2))
+        result += "a.selected:hover ." + c["css_class"] + " {"
+        result += background_color_adjust_color(adjust_lightness_saturation(c["color"], 0.2, 1.2))
         result += "}"
 
     result += '</style>'
@@ -86,12 +87,18 @@ def css_categories():
 @register.filter
 def small_cat(category, url=None, contrast=True):
 
+    name = Category.default_name if category is None else category.name
+    css_class = Category.default_css_class if category is None else category.css_class()
+
     class_contrast = " contrast" if contrast else ""
     if url is None:
-        return mark_safe('<span class="small-cat' + class_contrast +' selected" role="button"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</span>")
+        return mark_safe('<span class="small-cat' + class_contrast +' selected" role="button"><span class="cat ' + css_class + '"></span> ' + name + "</span>")
     else:
-        return mark_safe('<a class="small-cat' + class_contrast +' selected" role="button" href="' + url + '"><span class="cat ' + category.css_class() + '"></span> ' + category.name + "</a>")
+        return mark_safe('<a class="small-cat' + class_contrast +' selected" role="button" href="' + url + '"><span class="cat ' + css_class + '"></span> ' + name + "</a>")
 
 @register.filter
 def circle_cat(category):
-    return mark_safe('<span class="cat ' + category.css_class() + '" data-tooltip="' + category.name + '"></span>')
+    if category is None:
+        return mark_safe('<span class="cat ' + Category.default_css_class + '" data-tooltip="' + Category.default_name + '"></span>')
+    else:
+        return mark_safe('<span class="cat ' + category.css_class() + '" data-tooltip="' + category.name + '"></span>')

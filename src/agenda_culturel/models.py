@@ -11,6 +11,10 @@ from datetime import datetime
 
 class Category(models.Model):
 
+    default_name = "Sans catégorie"
+    default_css_class = "cat-nocat"
+    default_color = "#aaaaaa"
+
     COLOR_PALETTE = [
         ("#ea5545", "color 1"),
         ("#f46a9b", "color 2"),
@@ -103,7 +107,8 @@ class Event(models.Model):
         tags = list(Event.objects.values_list('tags', flat = True))
         uniq_tags = set()
         for t in tags:
-            uniq_tags = uniq_tags | set(t)
+            if t is not None:
+                uniq_tags = uniq_tags | set(t)
         return list(uniq_tags)
 
 

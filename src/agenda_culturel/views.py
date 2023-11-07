@@ -52,9 +52,14 @@ class CalendarDay:
 
     def add_event(self, event):
         self.events.append(event)
-        if not event.category.name in self.events_by_category:
-            self.events_by_category[event.category.name] = []
-        self.events_by_category[event.category.name].append(event)
+        if event.category is None:
+            if not "" in self.events_by_category:
+                self.events_by_category[""] = []
+            self.events_by_category[""].append(event)
+        else:
+            if not event.category.name in self.events_by_category:
+                self.events_by_category[event.category.name] = []
+            self.events_by_category[event.category.name].append(event)
 
 
 class CalendarList:
