@@ -173,10 +173,11 @@ class CalendarWeek(CalendarList):
 
 class CategoryCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
     template_name = 'agenda_culturel/forms/category-checkbox.html'
-    option_template_name = 'agenda_culturel/forms/category-checkbox-option.html'
+    option_template_name = 'agenda_culturel/forms/checkbox-option.html'
 
 class TagCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
     template_name = 'agenda_culturel/forms/tag-checkbox.html'
+    option_template_name = 'agenda_culturel/forms/checkbox-option.html'
 
 
 class EventFilter(django_filters.FilterSet):
@@ -185,17 +186,13 @@ class EventFilter(django_filters.FilterSet):
         lookup_expr='icontains', 
         field_name="tags", 
         widget=TagCheckboxSelectMultiple)
+
+
     category = django_filters.ModelMultipleChoiceFilter(label="Catégories", 
         field_name="category__id", 
         to_field_name='id', 
         queryset=Category.objects.all(), 
         widget=CategoryCheckboxSelectMultiple)
-    
-
-
-    def filter_queryset(self, queryset):
-        # TODO
-        return super().filter_queryset(queryset)
 
 
     class Meta:

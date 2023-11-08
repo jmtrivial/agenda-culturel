@@ -1,6 +1,16 @@
 {% load cat_extra %}
-<div id="{{ widget.attrs.id }}"{% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>{% for group, options, index in widget.optgroups %}{% if group %}
-  <div><label>{{ group }}</label>{% endif %}{% for widget in options %}<div role="button" class="small-cat">
-    {% include widget.template_name %}</div>{% endfor %}{% if group %}
-  </div>{% endif %}{% endfor %}
+<div class="buttons-filter">
+<label for="switch-tags">
+    filtrer par étiquette
+    <input type="checkbox" id="switch-tags" name="switch-tags" role="switch">
+  </label>
+  <label for="all-tags">
+    toutes
+    <input type="checkbox" id="all-tags" name="all-tags" checked>
+</label>
+</div>
+<div class="options-filter" id="{{ widget.attrs.id }}"{% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>{% for group, options, index in widget.optgroups %}{% if group %}
+    <div><label>{{ group }}</label>{% endif %}{% for widget in options %}<div role="button" class="small-cat">
+      {% include widget.template_name %}</div>{% endfor %}{% if group %}
+    </div>{% endif %}{% endfor %}
 </div>
