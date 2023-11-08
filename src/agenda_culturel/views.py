@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, FormView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import QueryDict
-
+from django import forms
 
 from .forms import EventSubmissionModelForm
 from .celery import create_event_from_submission
@@ -171,9 +171,25 @@ class CalendarWeek(CalendarList):
         return self.firstdate + timedelta(days=-7)
 
 
+class CategoryCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
+    template_name = 'agenda_culturel/forms/category-checkbox.html'
+    option_template_name = 'agenda_culturel/forms/category-checkbox-option.html'
+
+class TagCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
+    template_name = 'agenda_culturel/forms/tag-checkbox.html'
+
+
 class EventFilter(django_filters.FilterSet):
-    tags = django_filters.MultipleChoiceFilter(choices=[(t, t) for t in Event.get_all_tags()], lookup_expr='icontains', field_name="tags")
-    category = django_filters.ModelMultipleChoiceFilter(field_name="category__id", to_field_name='id', queryset=Category.objects.all())
+    tags = django_filters.MultipleChoiceFilter(label="Étiquettes", 
+        choices=[(t, t) for t in Event.get_all_tags()], 
+        lookup_expr='icontains', 
+        field_name="tags", 
+        widget=TagCheckboxSelectMultiple)
+    category = django_filters.ModelMultipleChoiceFilter(label="Catégories", 
+        field_name="category__id", 
+        to_field_name='id', 
+        queryset=Category.objects.all(), 
+        widget=CategoryCheckboxSelectMultiple)
     
 
 
@@ -185,7 +201,6 @@ class EventFilter(django_filters.FilterSet):
     class Meta:
         model = Event
         fields = ["category", "tags"]
-        field_labels = { 'category': "Catégories", "tags": "Étiquettes" }
 
     def get_url(self):
         if isinstance(self.form.data, QueryDict):

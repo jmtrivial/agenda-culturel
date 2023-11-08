@@ -69,14 +69,18 @@ def css_categories():
         result += background_color_adjust_color(adjust_lightness_saturation(c["color"], .2, 0.8), 0.8)
         result += "}"
 
-        result += "*:hover ." + c["css_class"] + " {"
+        result += "*:hover>." + c["css_class"] + " {"
         result += background_color_adjust_color(adjust_lightness_saturation(c["color"], 0.02, 1.0))
         result += "}"
         
+        result += "." + c["css_class"] + ".circ-cat, "
+        result += "form ." + c["css_class"] + ", "
         result += ".selected ." + c["css_class"] + " {"
         result += background_color_adjust_color(c["color"])
         result += "}"
 
+        result += "." + c["css_class"] + ".circ-cat:hover, "
+        result += "form ." + c["css_class"] + ":hover, "
         result += "a.selected:hover ." + c["css_class"] + " {"
         result += background_color_adjust_color(adjust_lightness_saturation(c["color"], 0.2, 1.2))
         result += "}"
@@ -99,9 +103,9 @@ def small_cat(category, url=None, contrast=True, close_url=None):
 @register.filter
 def circle_cat(category):
     if category is None:
-        return mark_safe('<span class="cat ' + Category.default_css_class + '" data-tooltip="' + Category.default_name + '"></span>')
+        return mark_safe('<span class="cat ' + Category.default_css_class + ' circ-cat" data-tooltip="' + Category.default_name + '"></span>')
     else:
-        return mark_safe('<span class="cat ' + category.css_class() + '" data-tooltip="' + category.name + '"></span>')
+        return mark_safe('<span class="cat ' + category.css_class() + ' circ-cat" data-tooltip="' + category.name + '"></span>')
 
 @register.filter
 def small_cat_close(category, close_url=None, contrast=True):

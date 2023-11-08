@@ -239,3 +239,20 @@ article.day>ul {
         }   
     }
 }
+
+article.filter {
+    form>div {
+        padding: 0.5em;
+        [role="button"] {
+            margin: 0.2em;
+            height: 2.6em;
+            line-height: 2.2em;
+            span {
+                margin-right: .6em;
+            }
+            label {
+                display: inline-block;
+            }
+        }
+    }
+}
