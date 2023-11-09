@@ -15,16 +15,16 @@
     <summary>Filtrer et trier</summary>
 <section>
     <form method="get" class="form django-form">
-                    {% csrf_token %}<br />
                     {{ filter.form }}<br />
                     <button type="submit">Filtrer</button><br />
     </form>
 </section>
 </details>
+<ul>
 {% for obj in paginator_filter %}
-    {{ obj.title }} <br />
+    <li><a href="{{ obj.get_absolute_url }}">{{ obj }}</a></li>
 {% endfor %}
-
+</ul>
 <footer>
     <span>
         {% if paginator_filter.has_previous %}
