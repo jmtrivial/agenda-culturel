@@ -287,13 +287,14 @@ def tag_list(request):
 
 class EventCreateView(CreateView):
     model = Event
-    fields = ["title"] # TODO add elements
+    fields = '__all__'
+
     template_name_suffix = "_create_form"
 
 
 class EventUpdateView(LoginRequiredMixin, UpdateView):
     model = Event
-    fields = ["title"] # TODO add elements
+    fields = '__all__'
 
 
 class EventDeleteView(LoginRequiredMixin, DeleteView):

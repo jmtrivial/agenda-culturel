@@ -84,10 +84,8 @@ msgid "Status"
 msgstr "Status"
 
 #: agenda_culturel/models.py:70
-#, fuzzy
-#| msgid "Day of the event"
 msgid "Category of the event"
-msgstr "Date de l'événement"
+msgstr "Catégorie de l'événement"
 
 #: agenda_culturel/models.py:72
 msgid "Day of the event"
@@ -208,3 +206,6 @@ msgstr "ce mois-ci"
 
 msgid "next month"
 msgstr "le mois prochain"
+
+msgid "Add another"
+msgstr "Ajouter une autre"
