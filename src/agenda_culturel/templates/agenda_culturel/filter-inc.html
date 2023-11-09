@@ -18,10 +18,13 @@
 </summary>
 <section>
 <form method="get" class="form django-form">
-                {% csrf_token %}<br />
                 {{ filter.form }}<br />
                 <button type="submit">Appliquer le filtre</button><br />
 </form>
 </section>
 </details>
+{% if filter.is_active %}
+<a href="{{ filter.get_url_without_filters }}" role="button">Supprimer le filtre</a>
+{% endif %}
+
 </article>

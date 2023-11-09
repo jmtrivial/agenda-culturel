@@ -206,6 +206,9 @@ class EventFilter(django_filters.FilterSet):
             print(self.form.data)
             return ""
 
+    def get_url_without_filters(self):
+        return self.request.build_absolute_uri().split("?")[0]
+
     def get_categories(self):
         return self.form.cleaned_data["category"]
 
@@ -226,7 +229,7 @@ def month_view(request, year = None, month = None):
     if month is None:
         month = now.month
 
-    filter = EventFilter(request.GET, queryset=Event.objects.all())
+    filter = EventFilter(request.GET, queryset=Event.objects.all(), request=request)
     cmonth = CalendarMonth(year, month, filter)
     
 
@@ -241,7 +244,7 @@ def week_view(request, year = None, week = None):
     if week is None:
         week = now.isocalendar()[1]
 
-    filter = EventFilter(request.GET, queryset=Event.objects.all())
+    filter = EventFilter(request.GET, queryset=Event.objects.all(), request=request)
     cweek = CalendarWeek(year, week, filter)
 
     context = {"year": year, "week": week, "calendar": cweek, "filter": filter }
@@ -259,7 +262,7 @@ def day_view(request, year = None, month = None, day = None):
 
     day = date(year, month, day)
     
-    filter = EventFilter(request.GET, Event.objects.all())
+    filter = EventFilter(request.GET, Event.objects.all(), request=request)
     events = filter.qs.filter((Q(start_day__lte=day) & (Q(end_day__gte=day)) | Q(start_day=day))).order_by("start_day", F("start_time").desc(nulls_last=True))
 
     context = {"day": day, "events": events, "filter": filter}

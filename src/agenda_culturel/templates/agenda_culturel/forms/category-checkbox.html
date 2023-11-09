@@ -1,12 +1,8 @@
 {% load cat_extra %}
-<div class="buttons-filter">
-    <label for="switch-categories">
-        filtrer par catégorie
-        <input type="checkbox" id="switch-categories" name="switch-categories" role="switch">
-      </label>
+<div class="buttons-filter" data-target="{{ widget.attrs.id }}">
       <label for="all-categories">
         toutes
-        <input type="checkbox" id="all-categories" name="all-categories" checked>
+        <input class="all-elements" type="checkbox" id="all-categories" name="all-categories" onChange="toggleSelectAllFilterElements(event)">
     </label>
 </div>
 <div class="options-filter" id="{{ widget.attrs.id }}"{% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>{% for group, options, index in widget.optgroups %}{% if group %}

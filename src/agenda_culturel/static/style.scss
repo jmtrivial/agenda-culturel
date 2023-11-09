@@ -244,6 +244,7 @@ article#filters {
     .buttons-filter {
         float: right;
         text-align: right;
+        display: none;
     }
     form>label {
         display: inline-block;
@@ -271,4 +272,9 @@ article#filters {
             margin-left: 0.3em;
         }
     }
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.4;
 }

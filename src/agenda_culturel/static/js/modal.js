@@ -1,6 +1,3 @@
-const isOpenClass = "modal-is-open";
-const openingClass = "modal-is-opening";
-const closingClass = "modal-is-closing";
 let visibleModal = null;
 
 // Toggle modal
