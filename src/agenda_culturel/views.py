@@ -301,7 +301,7 @@ class EventCreateView(CreateView):
     model = Event
 
     form_class = EventForm
-    template_name_suffix = "_form"
+    template_name_suffix = "_create_form"
 
 
 
