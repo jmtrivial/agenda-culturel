@@ -14,6 +14,11 @@
 
 <h1>Proposer un événement</h1>
 
+<article>
+{% url 'add_event' as local_url %}
+{% include "agenda_culturel/static_content.html" with name="add_event" url_path=local_url %}
+</article>
+
 <form method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Enregistrer">

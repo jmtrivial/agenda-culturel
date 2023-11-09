@@ -4,10 +4,24 @@ from django.utils.translation import gettext_lazy as _
 from django.template.defaultfilters import slugify  # new
 from django.urls import reverse
 from colorfield.fields import ColorField
+from ckeditor.fields import RichTextField
+
 
 from django.template.defaultfilters import date as _date
 from datetime import datetime
 
+
+class StaticContent(models.Model):
+
+    name = models.CharField(verbose_name=_('Name'), help_text=_('Category name'), max_length=512, unique=True)
+    text = RichTextField(verbose_name=_('Content'), help_text=_('Text as shown to the visitors'))
+    url_path = models.CharField(verbose_name=_('URL path'), help_text=_('URL path where the content is included.'))
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return self.url_path
 
 class Category(models.Model):
 

@@ -1,20 +1,18 @@
 {% extends "agenda_culturel/page.html" %}
 
-{% block title %}Éditer {{ object.title }}{% endblock %}
+{% block title %}Éditer {{ object.name }}{% endblock %}
 
 {% block entete_header %}
+{% load static %}
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
 <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
 <script src="/static/admin/js/jquery.init.js"></script>
-<link href="/static/css/django_better_admin_arrayfield.min.css" type="text/css" media="all" rel="stylesheet">
-<script src="/static/js/django_better_admin_arrayfield.min.js"></script>
 {% endblock %}
-
 
 {% block content %}
 
-{% load static_content_extra %}
-
-<h1>Édition de l'événement {{ object.title }} ({{ object.start_day }})</h1>
+<h1>Édition du contenu statique {{ object.name }}</h1>
 
 <form method="post">{% csrf_token %}
     {{ form.as_p }}

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_better_admin_arrayfield',
     'django_filters',
     'compressor',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [

@@ -2,11 +2,19 @@
 
 {% block title %}Importer un événement{% endblock %}
 
+
 {% block content %}
+
 <h1>Importer un événement</h1>
+<article>
+<header>
+{% url 'event_import_form' as local_url %}
+{% include "agenda_culturel/static_content.html" with name="import" url_path=local_url %}
+</header>
         <form method="post" action="">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Lancer l'import">
         </form>
+</article>
 {% endblock %}

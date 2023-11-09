@@ -1,12 +1,14 @@
 from django.contrib import admin
 from django import forms
-from .models import Event, EventSubmissionForm, Category
+from .models import Event, EventSubmissionForm, Category, StaticContent
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 from django_better_admin_arrayfield.forms.widgets import DynamicArrayWidget
 from django_better_admin_arrayfield.models.fields import DynamicArrayField
 
 admin.site.register(EventSubmissionForm)
 admin.site.register(Category)
+admin.site.register(StaticContent)
+
 
 class URLWidget(DynamicArrayWidget):
     def __init__(self, *args, **kwargs):

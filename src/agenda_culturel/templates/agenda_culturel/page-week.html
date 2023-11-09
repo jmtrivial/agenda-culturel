@@ -25,10 +25,15 @@
 
  {% block content %}
 
+ {% if home %}
+ <article>{% include "agenda_culturel/static_content.html" with name="home" url_path="/" %}</article>
+ {% endif %}
+
  <hgroup>
  <h1>Les événements de la semaine {{ week }}</h1>
  <h2>Du {{ calendar.calendar_days_list.0.date }} au {{ calendar.calendar_days_list.6.date }}  </h2>
 </hgroup>
+
 
 
 {% include "agenda_culturel/filter-inc.html" with filter=filter %}

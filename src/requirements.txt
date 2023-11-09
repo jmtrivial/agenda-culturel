@@ -31,3 +31,5 @@ django-better-admin-arrayfield==1.4.2
 django-filter==23.3
 django-compressor==4.4
 django-libsass==0.9
+django-ckeditor==6.7.0
+

@@ -8,7 +8,7 @@ from django import forms
 from .forms import EventSubmissionModelForm
 from .celery import create_event_from_submission
 
-from .models import Event, Category
+from .models import Event, Category, StaticContent
 from django.utils import timezone
 from enum import StrEnum
 from datetime import datetime, timedelta, date, time
@@ -221,7 +221,7 @@ class EventFilter(django_filters.FilterSet):
 
 
 def home(request):
-    return week_view(request)
+    return week_view(request, home=True)
 
 def month_view(request, year = None, month = None):
     now = date.today()
@@ -238,7 +238,7 @@ def month_view(request, year = None, month = None):
     return render(request, 'agenda_culturel/page-month.html', context)
 
 
-def week_view(request, year = None, week = None):
+def week_view(request, year = None, week = None, home=True):
     now = date.today()
     if year is None:
         year = now.year
@@ -249,6 +249,8 @@ def week_view(request, year = None, week = None):
     cweek = CalendarWeek(year, week, filter)
 
     context = {"year": year, "week": week, "calendar": cweek, "filter": filter }
+    if home:
+        context["home"] = 1
     return render(request, 'agenda_culturel/page-week.html', context)
 
 
@@ -283,6 +285,21 @@ def tag_list(request):
     tags = Event.get_all_tags()    
     context = {"tags": sorted(tags, key=lambda x: remove_accents(x).lower())}
     return render(request, 'agenda_culturel/tags.html', context)
+
+
+class StaticContentCreateView(LoginRequiredMixin, CreateView):
+    model = StaticContent
+    fields = ['text']
+
+    def form_valid(self, form):
+         form.instance.name = self.request.GET["name"]
+         form.instance.url_path = self.request.GET["url_path"]
+         return super().form_valid(form)
+
+class StaticContentUpdateView(LoginRequiredMixin, UpdateView):
+    model = StaticContent
+    fields = ['text']
+
 
 
 class EventForm(forms.ModelForm):
