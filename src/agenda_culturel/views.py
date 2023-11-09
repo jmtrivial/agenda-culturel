@@ -27,7 +27,7 @@ import unicodedata
 
 def get_event_qs(request):
     if request.user.is_authenticated:
-        return Event.objects.all()
+        return Event.objects.filter(~Q(status=Event.STATUS.TRASH))
     else:
         return Event.objects.filter(status=Event.STATUS.PUBLISHED)
 

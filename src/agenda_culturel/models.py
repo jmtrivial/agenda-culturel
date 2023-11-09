@@ -135,6 +135,14 @@ class Event(models.Model):
                 uniq_tags = uniq_tags | set(t)
         return list(uniq_tags)
 
+    def is_draft(self):
+        return self.status == Event.STATUS.DRAFT
+
+    def is_published(self):
+        return self.status == Event.STATUS.PUBLISHED
+
+    def is_trash(self):
+        return self.status == Event.STATUS.TRASH
 
 
 class EventSubmissionForm(models.Model):

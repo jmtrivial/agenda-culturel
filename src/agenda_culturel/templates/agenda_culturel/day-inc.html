@@ -1,5 +1,6 @@
 
 {% load cat_extra %}
+{% load event_extra %}
 {% load utils_extra %}
 {% load static %}
 
@@ -32,7 +33,7 @@
                                 {% if event.single_day and event.start_time %}
                                 {{ event.start_time }}
                                 {% endif %}
-                                <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+                                <a href="{{ event.get_absolute_url }}">{{ event|picto_status }} {{ event.title }}</a>
                             </li>
                             {% endfor %}
                         </ul>
@@ -54,7 +55,7 @@
             {% if event.single_day and event.start_time %}
             {{ event.start_time }}
             {% endif %}
-            <a href="{{ daytag }}" data-target="event-{{ event.id }}" onClick="toggleModal(event)">{{ event.title }}</a>
+            {{ event|picto_status }} <a href="{{ daytag }}" data-target="event-{{ event.id }}" onClick="toggleModal(event)">{{ event.title }}</a>
             <dialog id="event-{{ event.id }}">
                 {% include "agenda_culturel/event-inc.html" with event=event display="modal" close_button=1 filter=filter %}
             </dialog>

@@ -21,7 +21,7 @@
     {{ event.category | small_cat }}
     {% if event.location %}<hgroup>{% endif %}
             {% if display == "in list" %}<h2>{% else %}<h3>{% endif %}
-                
+            {{ event|picto_status }}    
             <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
             {% if display == "in list" %}</h2>{% else %}</h3>{% endif %}
     {% if event.location %}
@@ -50,7 +50,7 @@
             class="close" 
             data-target="event-{{ event.id }}"
             onClick="toggleModal(event)"></a>
-            <h3>{{ event.category | small_cat }} {{ event.title }}</h3>
+            <h3>{{ event.category | small_cat }} {{ event|picto_status }} {{ event.title }}</h3>
         
             <p>
                 <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -70,7 +70,7 @@
     <header>
         {% include "agenda_culturel/ephemeris-inc.html" with event=event filter=filter %}
         {{ event.category | small_cat }}
-        <h1>{{ event.title }}</h1>
+        <h1>{{ event|picto_status }} {{ event.title }}</h1>
         <p><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <use href="{% static 'images/feather-sprite.svg' %}#calendar" />
         </svg>
