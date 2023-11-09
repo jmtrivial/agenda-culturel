@@ -139,7 +139,7 @@ class CalendarMonth(CalendarList):
         self.month = month
         r = calendar.monthrange(year, month)
 
-        first = date(year, month, r[0])
+        first = date(year, month, 1)
         last = date(year, month, r[1])
 
         super().__init__(first, last, filter)
