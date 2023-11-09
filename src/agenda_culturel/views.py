@@ -285,16 +285,29 @@ def tag_list(request):
     return render(request, 'agenda_culturel/tags.html', context)
 
 
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = '__all__'
+        widgets = {
+            'start_day': forms.TextInput(attrs={'type': 'date'}),
+            'start_time': forms.TextInput(attrs={'type': 'time'}),
+            'end_day': forms.TextInput(attrs={'type': 'date'}),
+            'end_time': forms.TextInput(attrs={'type': 'time'}),
+        }
+
+
 class EventCreateView(CreateView):
     model = Event
-    fields = '__all__'
 
-    template_name_suffix = "_create_form"
+    form_class = EventForm
+    template_name_suffix = "_form"
+
 
 
 class EventUpdateView(LoginRequiredMixin, UpdateView):
     model = Event
-    fields = '__all__'
+    form_class = EventForm
 
 
 class EventDeleteView(LoginRequiredMixin, DeleteView):

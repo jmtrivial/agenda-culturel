@@ -2,9 +2,16 @@
 
 {% block title %}Éditer {{ object.title }}{% endblock %}
 
+{% block entete_header %}
+<script src="/static/admin/js/vendor/jquery/jquery.js"></script>
+<script src="/static/admin/js/jquery.init.js"></script>
+<link href="/static/css/django_better_admin_arrayfield.min.css" type="text/css" media="all" rel="stylesheet">
+<script src="/static/js/django_better_admin_arrayfield.min.js"></script>
+{% endblock %}
 
 
 {% block content %}
+
 <h1>Édition de l'événement {{ object.title }} ({{ object.start_day }})</h1>
 
 <form method="post">{% csrf_token %}

@@ -2,12 +2,21 @@
 
 {% block title %}Proposer un événement{% endblock %}
 
+{% block entete_header %}
+<script src="/static/admin/js/vendor/jquery/jquery.js"></script>
+<script src="/static/admin/js/jquery.init.js"></script>
+<link href="/static/css/django_better_admin_arrayfield.min.css" type="text/css" media="all" rel="stylesheet">
+<script src="/static/js/django_better_admin_arrayfield.min.js"></script>
+{% endblock %}
+
 
 {% block content %}
+
 <h1>Proposer un événement</h1>
 
 <form method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Enregistrer">
 </form>
+
 {% endblock %}
