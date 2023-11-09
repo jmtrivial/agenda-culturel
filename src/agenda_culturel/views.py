@@ -41,6 +41,7 @@ class CalendarDay:
     def __init__(self, d, on_requested_interval = True):
         self.date = d
         now = date.today()
+        self.week = d.isocalendar()[1]
 
         self.in_past = d < now
         self.today = d == now

@@ -8,7 +8,7 @@
 
 <article class="day{{ day|calendar_classes:fixed_style }}" id="{{ daytag }}">
     <header>
-    <h2><a href="{{ day.date | url_day }}?{{ filter.get_url }}">{{ day.date | date:"l j" }}</a></h2>
+    <{% if headers %}{{ headers }}{% else %}h2{% endif %}><a href="{{ day.date | url_day }}?{{ filter.get_url }}">{{ day.date | date:"l j" }}</a></{% if headers %}{{ headers }}{% else %}h2{% endif %}>
     </header>
     {% if day.events %}
     {% if resume %}

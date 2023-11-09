@@ -45,10 +45,13 @@
         </div>
     </header>
     <div id="calendar">
-        <div class="grid">
+        <div class="grid week-in-month">
         {% for d in calendar.calendar_days_list %}
-        {% if forloop.counter0|divisibleby:7 and not forloop.first %}</div><div class="grid">{% endif %}
-        {% include "agenda_culturel/day-inc.html" with day=d resume=1 fixed_style=calendar.all_in_past filter=filter %}
+        {% if forloop.counter0|divisibleby:7 %}
+            {% if not forloop.first %}</div><div class="grid week-in-month">{% endif %}
+                <div class="entete-semaine"><h2><a href="{% url 'week_view' calendar.month d.week %}?{{ filter.get_url }}">Semaine {{ d.week }}</a></h2></div>
+                {% endif %}
+        {% include "agenda_culturel/day-inc.html" with day=d resume=1 fixed_style=calendar.all_in_past filter=filter headers="h3" %}
         {% endfor %}
         </div>
     </div>
