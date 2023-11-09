@@ -1,4 +1,4 @@
 <label for="{{ widget.attrs.id }}">
     {{ widget.label }}
-    {% include "django/forms/widgets/input.html" %}
+    <input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value }}"{% endif %}{% include "django/forms/widgets/attrs.html" %} onChange="toggleElement(event)" data-target="{{ container_id }}">
 </label>

@@ -1,12 +1,14 @@
 {% load cat_extra %}
-<div class="buttons-filter" data-target="{{ widget.attrs.id }}">
+<div class="buttons-filter">
       <label for="all-categories">
         toutes
-        <input class="all-elements" type="checkbox" id="all-categories" name="all-categories" onChange="toggleSelectAllFilterElements(event)">
+        <input class="all-elements" type="checkbox" id="{{ widget.attrs.id }}-button" name="all-categories" onChange="toggleSelectAllFilterElements(event)" data-target="{{ widget.attrs.id }}">
     </label>
 </div>
-<div class="options-filter" id="{{ widget.attrs.id }}"{% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>{% for group, options, index in widget.optgroups %}{% if group %}
+{% with container_id=widget.attrs.id %}
+<div class="options-filter" id="{{ widget.attrs.id }}"{% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %} data-button="{{ widget.attrs.id }}-button">{% for group, options, index in widget.optgroups %}{% if group %}
   <div><label>{{ group }}</label>{% endif %}{% for widget in options %}<div role="button" class="small-cat contrast">
     {{ widget.value.instance | circle_cat }}{% include widget.template_name %}</div>{% endfor %}{% if group %}
   </div>{% endif %}{% endfor %}
 </div>
+{% endwith %}

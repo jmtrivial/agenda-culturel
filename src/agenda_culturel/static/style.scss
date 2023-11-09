@@ -267,14 +267,19 @@ article#filters {
             .cat {
                 border: 0;
             }
+    
+            &.no-selected {
+                @extend .secondary, .outline;
+
+                label {
+                    color: var(--secondary);
+                }
+            }
         }
         [role="button"] input {
             margin-left: 0.3em;
         }
+
     }
 }
 
-.disabled {
-    pointer-events: none;
-    opacity: 0.4;
-}
