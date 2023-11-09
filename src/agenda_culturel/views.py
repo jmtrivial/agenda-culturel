@@ -25,6 +25,13 @@ from django.contrib.auth.decorators import login_required
 import unicodedata
 
 
+def get_event_qs(request):
+    if request.user.is_authenticated:
+        return Event.objects.all()
+    else:
+        return Event.objects.filter(status=Event.STATUS.PUBLISHED)
+
+
 def daterange(start, end, step=timedelta(1)):
     if end is None:
         yield start
@@ -230,7 +237,7 @@ def month_view(request, year = None, month = None):
     if month is None:
         month = now.month
 
-    filter = EventFilter(request.GET, queryset=Event.objects.all(), request=request)
+    filter = EventFilter(request.GET, queryset=get_event_qs(request), request=request)
     cmonth = CalendarMonth(year, month, filter)
     
 
@@ -245,7 +252,7 @@ def week_view(request, year = None, week = None, home=True):
     if week is None:
         week = now.isocalendar()[1]
 
-    filter = EventFilter(request.GET, queryset=Event.objects.all(), request=request)
+    filter = EventFilter(request.GET, queryset=get_event_qs(request), request=request)
     cweek = CalendarWeek(year, week, filter)
 
     context = {"year": year, "week": week, "calendar": cweek, "filter": filter }
@@ -265,7 +272,7 @@ def day_view(request, year = None, month = None, day = None):
 
     day = date(year, month, day)
     
-    filter = EventFilter(request.GET, Event.objects.all(), request=request)
+    filter = EventFilter(request.GET, get_event_qs(request), request=request)
     events = filter.qs.filter((Q(start_day__lte=day) & (Q(end_day__gte=day)) | Q(start_day=day))).order_by("start_day", F("start_time").desc(nulls_last=True))
 
     context = {"day": day, "events": events, "filter": filter}
@@ -382,7 +389,7 @@ class EventFilterAdmin(django_filters.FilterSet):
 
 @login_required(login_url="/accounts/login/")
 def event_list(request):
-    filter = EventFilterAdmin(request.GET, queryset=Event.objects.all())
+    filter = EventFilterAdmin(request.GET, queryset=Event.objects.all().order_by("-created_date"))
     paginator = Paginator(filter.qs, 10)
     page = request.GET.get('page')
 
