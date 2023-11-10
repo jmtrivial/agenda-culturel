@@ -401,3 +401,47 @@ def event_list(request):
         response = paginator.page(paginator.num_pages)
 
     return render(request, 'agenda_culturel/list.html', {'filter': filter, 'paginator_filter': response})
+
+
+
+class SearchEventFilter(django_filters.FilterSet):
+    tags = django_filters.CharFilter(lookup_expr='icontains')
+    title = django_filters.CharFilter(lookup_expr='contains')
+    location = django_filters.CharFilter(lookup_expr='contains')
+    description = django_filters.CharFilter(lookup_expr='contains')
+    start_day = django_filters.DateFromToRangeFilter(widget=django_filters.widgets.RangeWidget(attrs={'type': 'date'}))
+
+    q = django_filters.CharFilter(method='custom_filter', label=_("Search"))
+
+    o = django_filters.OrderingFilter(
+        # tuple-mapping retains order
+        fields=(
+            ('title', 'title'),
+            ('description', 'description'),
+            ('start_day', 'start_day'),
+        ),
+    )
+
+    def custom_filter(self, queryset, name, value):
+        return queryset.filter(
+            Q(title__contains=value) | Q(location__contains=value) | Q(description__contains=value))
+
+
+    class Meta:
+        model = Event
+        fields = ['q', 'title', 'location', 'description', 'category', 'tags', 'start_day']
+
+
+def event_search(request):
+    filter = SearchEventFilter(request.GET, queryset=get_event_qs(request).order_by("-start_day"))
+    paginator = Paginator(filter.qs, 10)
+    page = request.GET.get('page')
+
+    try:
+        response = paginator.page(page)
+    except PageNotAnInteger:
+        response = paginator.page(1)
+    except EmptyPage:
+        response = paginator.page(paginator.num_pages)
+
+    return render(request, 'agenda_culturel/search.html', {'filter': filter, 'paginator_filter': response})

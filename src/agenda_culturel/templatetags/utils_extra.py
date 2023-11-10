@@ -4,6 +4,7 @@ from django.utils.safestring import mark_safe
 from urllib.parse import urlparse
 from datetime import timedelta, date
 from django.urls import reverse_lazy
+from django.templatetags.static import static
 
 register = template.Library()
 
@@ -55,3 +56,9 @@ def calendar_classes(d, fixed_style):
 @register.filter
 def url_day(d):
     return reverse_lazy("day_view", kwargs={"year": d.year, "month": d.month, "day": d.day})
+
+@register.simple_tag
+def picto_from_name(name, datatooltip=""):
+    return mark_safe('<span data-tooltip="' + datatooltip + '"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + \
+        '<use href="' + static("images/feather-sprite.svg") + '#' + name + '" />' + \
+        '</svg></span>')

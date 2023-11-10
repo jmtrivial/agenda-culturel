@@ -27,7 +27,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path("test_app/", include("test_app.urls")),
     path("static-content/create", StaticContentCreateView.as_view(), name="create_static_content"),
-    path("static-content/<int:pk>/edit", StaticContentUpdateView.as_view(), name="edit_static_content")
+    path("static-content/<int:pk>/edit", StaticContentUpdateView.as_view(), name="edit_static_content"),
+    path('rechercher/', event_search, name='event_search')
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,57 @@
+{% extends "agenda_culturel/page.html" %}
+
+{% block title %}Rechercher un évnement{% endblock %}
+
+
+{% block content %}
+
+
+<article>
+    <header>
+        <h1>Rechercher un événement</h1>
+    </header>
+    
+
+    <form method="get" class="form django-form">
+        {% for field in filter.form %}
+        <div>
+            {{ field.errors }}
+            {{ field.label_tag }} {{ field }}
+        </div>
+        {% if forloop.first %}
+        <details>
+            <summary>Rechercher avancée</summary>
+        {% endif %}
+        {% if forloop.last %}
+        </details>
+        {% endif %}
+    {% endfor %}
+
+    <button type="submit">Rechercher</button>
+    </form>
+
+    <ul>
+{% for obj in paginator_filter %}
+    <li><a href="{{ obj.get_absolute_url }}">{{ obj }}</a></li>
+{% endfor %}
+</ul>
+<footer>
+    <span>
+        {% if paginator_filter.has_previous %}
+            <a href="?page=1" role="button">&laquo; premier</a>
+            <a href="?page={{ paginator_filter.previous_page_number }}" role="button">précédent</a>
+        {% endif %}
+
+        <span>
+            Page {{ paginator_filter.number }} sur {{ paginator_filter.paginator.num_pages }}
+        </span>
+
+        {% if paginator_filter.has_next %}
+            <a href="?page={{ paginator_filter.next_page_number }}" role="button">suivant</a>
+            <a href="?page={{ paginator_filter.paginator.num_pages }}" role="button">dernier &raquo;</a>
+        {% endif %}
+    </span>
+</footer>
+</article>
+
+{% endblock %}

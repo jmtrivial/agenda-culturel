@@ -23,6 +23,7 @@
     {% endblock %}
 </head>
 {% load event_extra %}
+{% load utils_extra %}
 <body>
     <nav class="container-fluid">
         <ul>
@@ -37,6 +38,9 @@
             </li>
         </ul>
         <ul>
+            <li>
+                <a href="{% url 'event_search' %}">Rechercher {% picto_from_name "search" %}</a>
+            </li>
             <li>
                 <details role="list" dir="rtl">
                     <summary aria-haspopup="listbox" role="link">Maintenant</summary>

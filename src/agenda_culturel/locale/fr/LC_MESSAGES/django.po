@@ -209,3 +209,6 @@ msgstr "le mois prochain"
 
 msgid "Add another"
 msgstr "Ajouter une autre"
+
+msgid "Search"
+msgstr "Rechercher"
