@@ -24,6 +24,9 @@ import django_filters
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
+
 import unicodedata
 
 
@@ -318,10 +321,11 @@ class StaticContentCreateView(LoginRequiredMixin, CreateView):
          form.instance.url_path = self.request.GET["url_path"]
          return super().form_valid(form)
 
-class StaticContentUpdateView(LoginRequiredMixin, UpdateView):
+
+class StaticContentUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = StaticContent
     fields = ['text']
-
+    success_message = _('The static content has been successfully updated.')
 
 
 class EventForm(forms.ModelForm):
@@ -344,14 +348,17 @@ class EventCreateView(CreateView):
 
 
 
-class EventUpdateView(LoginRequiredMixin, UpdateView):
+class EventUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = Event
     form_class = EventForm
+    success_message = _('The event has been successfully modified.')
 
 
-class EventDeleteView(LoginRequiredMixin, DeleteView):
+
+class EventDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
     model = Event
     success_url = reverse_lazy('view_all_events')
+    success_message = _('The event has been successfully deleted.')
 
 
 class EventDetailView(DetailView):
@@ -377,6 +384,7 @@ class EventSubmissionFormView(FormView):
 
     def create_event(self, valid_data):
         url = valid_data["url"]
+        messages.success(self.request, _("The URL has been submitted and the associated event will be integrated in the agenda after validation."))
         create_event_from_submission.delay(url)
 
 

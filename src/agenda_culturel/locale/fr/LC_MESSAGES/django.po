@@ -224,3 +224,15 @@ msgstr "Illustration (image locale)"
 
 msgid "Illustration image stored in the agenda server"
 msgstr "Image d'illustration stockée sur le serveur de l'agenda"
+
+msgid "The event has been successfully modified."
+msgstr "L'événement a été modifié avec succès."
+
+msgid "The event has been successfully deleted."
+msgstr "L'événement a été supprimé avec succès"
+
+msgid "The URL has been submitted and the associated event will be integrated in the agenda after validation."
+msgstr "L'adresse a été soumise et l'événement associé sera prochainement intégré à l'agenda après validation."
+
+msgid "The static content has been successfully updated."
+msgstr "Le contenu statique a été modifié avec succès."
