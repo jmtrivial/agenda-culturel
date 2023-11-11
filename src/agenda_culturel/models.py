@@ -107,8 +107,8 @@ class Event(models.Model):
 
     description = models.TextField(verbose_name=_('Description'), help_text=_('General description of the event'), blank=True, null=True)
 
-    image = models.URLField(verbose_name=_('Illustration'), help_text=_("URL of the illustration image"), max_length=200, blank=True, null=True)
-    image_alt = models.CharField(verbose_name=_('Illustration description'), help_text=_('Alternative text used by screen readers for the image'), blank=True, null=True, max_length=512)
+    image = models.URLField(verbose_name=_('Illustration'), help_text=_("URL of the illustration image"), max_length=1024, blank=True, null=True)
+    image_alt = models.CharField(verbose_name=_('Illustration description'), help_text=_('Alternative text used by screen readers for the image'), blank=True, null=True, max_length=1024)
 
     reference_urls = ArrayField(models.URLField(max_length=512), verbose_name=_('URLs'), help_text=_("List of all the urls where this event can be found."), blank=True, null=True)
 

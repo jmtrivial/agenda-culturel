@@ -42,55 +42,155 @@ class Extractor:
 
 class ExtractorFacebook(Extractor):
 
+    class SimpleFacebookEvent:
+
+        def __init__(self, data):
+            self.elements = {}
+
+            for key in ["id", "start_timestamp", "end_timestamp"]:
+                self.elements[key] = data[key] if key in data else None
+
+            if "parent_event" in data:
+                self.parent = ExtractorFacebook.SimpleFacebookEvent(data["parent_event"])
+
+
     class FacebookEvent:
 
         name = "event"
-        keys = ["start_time_formatted", 'start_timestamp', 'is_past', "name", "price_info", "cover_media_renderer", "event_creator", "id", "day_time_sentence", "event_place", "comet_neighboring_siblings"]
+        keys = [
+                ["start_time_formatted", 'start_timestamp', 
+                'is_past', 
+                "name", 
+                "price_info", 
+                "cover_media_renderer", 
+                "event_creator", 
+                "id", 
+                "day_time_sentence", 
+                "event_place", 
+                "comet_neighboring_siblings"],
+                ["event_description"],
+                ["start_timestamp", "end_timestamp"]
+        ]
+        rules = {
+            "event_description": { "description": ["text"]},
+            "cover_media_renderer": {"image_alt": ["cover_photo", "photo", "accessibility_caption"], "image": ["cover_photo", "photo", "full_image", "uri"]},
+            "event_creator": { "event_creator_name": ["name"], "event_creator_url": ["url"] },
+            "event_place": {"event_place_name": ["name"] }
+        }
 
-        def __init__(self, event):
-            self.data = event
+        def __init__(self, i, event):
+            self.fragments = {}
+            self.elements = {}
+            self.neighbor_events = None
+            self.possible_end_timestamp = []
+            self.add_fragment(i, event)
+
+        def get_element(self, key):
+            return self.elements[key] if key in self.elements else None
+
+
+        def get_element_datetime(self, key):
+            v = self.get_element(key)
+            return datetime.fromtimestamp(v) if v is not None else None
+
+        def add_fragment(self, i, event):
+            self.fragments[i] = event
+
+            if ExtractorFacebook.FacebookEvent.keys[i] == ["start_timestamp", "end_timestamp"]:
+                self.get_possible_end_timestamp(i, event)
+            else:
+                for k in ExtractorFacebook.FacebookEvent.keys[i]:
+                    if k == "comet_neighboring_siblings":
+                        self.get_neighbor_events(event[k])
+                    elif k in ExtractorFacebook.FacebookEvent.rules:
+                        for nk, rule in ExtractorFacebook.FacebookEvent.rules[k].items():
+                            c = event[k]
+                            for ki in rule:
+                                c = c[ki]
+                            self.elements[nk] = c
+                    else:
+                        self.elements[k] = event[k]
+
+
+        def get_possible_end_timestamp(self, i, data):
+            self.possible_end_timestamp.append(dict((k, data[k]) for k in ExtractorFacebook.FacebookEvent.keys[i]))
+
+
+        def get_neighbor_events(self, data):
+            self.neighbor_events = [ExtractorFacebook.SimpleFacebookEvent(d) for d in data]
 
         def __str__(self):
-            return self.data["name"]
+            return str(self.elements) + "\n Neighbors: " + ", ".join([ne.elements["id"] for ne in self.neighbor_events])
 
-        def find_event_in_array(array):
+        def consolidate_current_event(self):
+            if self.neighbor_events is not None and "id" in self.elements and "end_timestamp" not in self.elements:
+                if self.neighbor_events is not None and "id" in self.elements:
+                    id = self.elements["id"]
+                    for ne in self.neighbor_events:
+                        if ne.elements["id"] == id:
+                            self.elements["end_timestamp"] = ne.elements["end_timestamp"]
+
+            if "end_timestamp" not in self.elements and len(self.possible_end_timestamp) != 0:
+                for s in self.possible_end_timestamp:
+                    if s["start_timestamp"] == self.elements["start_timestamp"]:
+                        self.elements["end_timestamp"] = s["end_timestamp"]
+                        break
+
+        def find_event_fragment_in_array(array, event, first = True):
             if isinstance(array, dict):
-                if len(ExtractorFacebook.FacebookEvent.keys) == len([k for k in ExtractorFacebook.FacebookEvent.keys if k in array]):
-                    return ExtractorFacebook.FacebookEvent(array)
-                else:
+
+                seen = False
+                for i, ks in enumerate(ExtractorFacebook.FacebookEvent.keys):
+                    if len(ks) == len([k for k in ks if k in array]):
+                        seen = True
+                        if event is None:
+                                event = ExtractorFacebook.FacebookEvent(i, array)
+                        else:
+                            event.add_fragment(i, array)
+                        # only consider the first of FacebookEvent.keys
+                        break
+                if not seen:
                     for k in array:
-                        v = ExtractorFacebook.FacebookEvent.find_event_in_array(array[k])
-                        if v != None:
-                            return v
+                        event = ExtractorFacebook.FacebookEvent.find_event_fragment_in_array(array[k], event, False)
             elif isinstance(array, list):
                 for e in array:
-                        v = ExtractorFacebook.FacebookEvent.find_event_in_array(e)
-                        if v != None:
-                            return v
-            return None
+                    event = ExtractorFacebook.FacebookEvent.find_event_fragment_in_array(e, event, False)
+
+            if event is not None and first:
+                event.consolidate_current_event()
+            return event
 
 
         def build_event(self, url):
             from .models import Event
-            # TODO
-            return Event(title=self.data["name"], 
-                        status=Event.STATUS.DRAFT,
-                        start_day=datetime.fromtimestamp(self.data["start_timestamp"]),
-                        reference_urls=[url])
+
+            return Event(title=self.get_element("name"), 
+                status=Event.STATUS.DRAFT,
+                start_day=self.get_element_datetime("start_timestamp"),
+                start_time=self.get_element_datetime("start_timestamp"),
+                end_day=self.get_element_datetime("end_timestamp"),
+                end_time=self.get_element_datetime("end_timestamp"),
+                location=self.get_element("event_place_name"),
+                description=self.get_element("description"),
+                image=self.get_element("image"),
+                image_alt=self.get_element("image_alt"),
+                reference_urls=[url])
+
 
     def process_page(txt, url):
 
+        fevent = None
         soup = BeautifulSoup(txt, "html.parser")
         for json_script in soup.find_all('script', type="application/json"):
             json_txt = json_script.get_text()
             json_struct = json.loads(json_txt)
-            fevent = ExtractorFacebook.FacebookEvent.find_event_in_array(json_struct)
-            if fevent != None:
-                logger.info(str(fevent.data))
+            fevent = ExtractorFacebook.FacebookEvent.find_event_fragment_in_array(json_struct, fevent)
 
-                result = fevent.build_event(url)
-                return [result]
-        
+        if fevent is not None:
+            logger.info("Facebook event: " + str(fevent))
+            result = fevent.build_event(url)
+            return [result]
+            
         return None
 
 

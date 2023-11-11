@@ -33,7 +33,7 @@ def create_event_from_submission(self, url):
     logger.info(f"{url=}")
 
     if len(Event.objects.filter(reference_urls__contains=[url])) != 0:
-        logger.info("Already known url: ", url)
+        logger.info("Already known url: %s", url)
     else:
         try:
             logger.info("About to create event from submission")
@@ -43,8 +43,6 @@ def create_event_from_submission(self, url):
                 for e in events:
                     e.save()
 
-        except BadHeaderError:
-            logger.info("BadHeaderError")
         except Exception as e:
             logger.error(e)
 
