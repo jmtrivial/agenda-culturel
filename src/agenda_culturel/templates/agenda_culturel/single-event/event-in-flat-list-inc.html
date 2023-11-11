@@ -19,5 +19,5 @@
         {% endfor %}
     </p>
     <div class="description">
-        {% if event.description_hl %}{{ event.description_hl | safe }}{% else %}{% if event.description %}{{ event.description }}{% else %}<em>pas de description</em>{% endif %}{% endif %}
+        {% if event.description_hl %}{{ event.description_hl | safe }}{% else %}{% if event.description %}{{ event.description |truncatewords:60 }}{% else %}<em>pas de description</em>{% endif %}{% endif %}
     </div>
