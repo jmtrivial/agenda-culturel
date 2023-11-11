@@ -370,24 +370,12 @@ class EventSubmissionFormView(FormView):
 
 
 class EventFilterAdmin(django_filters.FilterSet):
-    tags = django_filters.CharFilter(lookup_expr='icontains')
-
-
-    o = django_filters.OrderingFilter(
-        # tuple-mapping retains order
-        fields=(
-            ('created_date', 'created_date'),
-            ('modified_date', 'modified_date'),
-            ('status', 'status'),
-            ('title', 'title'),
-            ('start_day', 'start_day'),
-        ),
-    )
-
+    status = django_filters.MultipleChoiceFilter(choices=Event.STATUS.choices, widget=forms.CheckboxSelectMultiple)
 
     class Meta:
         model = Event
-        fields = ['title', 'status', 'category', 'tags']
+        fields = ['status']
+
 
 @login_required(login_url="/accounts/login/")
 def event_list(request):
@@ -402,7 +390,7 @@ def event_list(request):
     except EmptyPage:
         response = paginator.page(paginator.num_pages)
 
-    return render(request, 'agenda_culturel/list.html', {'filter': filter, 'paginator_filter': response})
+    return render(request, 'agenda_culturel/recently-added.html', {'filter': filter, 'paginator_filter': response})
 
 
 class SimpleSearchEventFilter(django_filters.FilterSet):

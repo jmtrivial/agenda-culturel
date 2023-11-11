@@ -329,3 +329,10 @@ article#filters {
     font-size: 90%;
     margin-top: -0.5em;
 }
+
+.form.recent {
+    #id_status>div {
+        display: inline-block;
+        margin-right: 2em;
+    }
+}

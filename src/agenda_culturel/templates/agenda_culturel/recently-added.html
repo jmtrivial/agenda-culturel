@@ -1,28 +1,27 @@
 {% extends "agenda_culturel/page.html" %}
 
-{% block title %}Tous les événements{% endblock %}
+{% block title %}Derniers événements soumis{% endblock %}
 
-{% comment %}
-    TODO: 
-    * améliorer le rendu ici
-{% endcomment %}
+{% load cat_extra %}
+{% block entete_header %}
+    {% css_categories %}
+{% endblock %}
 
 {% block content %}
 
-<h1>Derniers événements soumis</h1>
-    <article>
-        <details>
-    <summary>Filtrer et trier</summary>
-<section>
-    <form method="get" class="form django-form">
-                    {{ filter.form }}<br />
-                    <button type="submit">Filtrer</button><br />
-    </form>
-</section>
-</details>
-<ul>
+<article>
+    <header>
+        <h1>Derniers événements soumis</h1>
+
+        <form method="get" class="form django-form recent">
+                        {{ filter.form }}<br />
+                        <button type="submit">Filtrer</button><br />
+        </form>
+    </header>
+
+    <ul>
 {% for obj in paginator_filter %}
-    <li><a href="{{ obj.get_absolute_url }}">{{ obj }}</a></li>
+    <li>{% include "agenda_culturel/single-event/event-in-flat-list-inc.html" with event=obj %}</li>
 {% endfor %}
 </ul>
 <footer>

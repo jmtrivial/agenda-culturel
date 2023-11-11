@@ -1,7 +1,9 @@
 {% load utils_extra %}
 {% load cat_extra %}
+{% load event_extra %}
 
 <p>{{ event.category | small_cat }} 
+    {{ event|picto_status }}
      <a href="{{ event.get_absolute_url }}">
         {% if event.title_hl %}{{ event.title_hl | safe }}{% else %}{{ event.title }}{% endif %}</a></p>
     <p class="subentry-search">{% picto_from_name "calendar" %}
@@ -17,5 +19,5 @@
         {% endfor %}
     </p>
     <div class="description">
-        {% if event.description_hl %}{{ event.description_hl | safe }}{% else %}{{ event.description }}{% endif %}
+        {% if event.description_hl %}{{ event.description_hl | safe }}{% else %}{% if event.description %}{{ event.description }}{% else %}<em>pas de description</em>{% endif %}{% endif %}
     </div>
