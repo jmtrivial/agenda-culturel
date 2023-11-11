@@ -14,6 +14,6 @@
 <h1>Les événements <em>{{ tag }}</em></h1>
 
 {% for event in events %}
-{% include "agenda_culturel/event-inc.html" with event=event display="in list" %}
+{% include "agenda_culturel/single-event/event-in-list-inc.html" with event=event %}
 {% endfor %}
 {% endblock %}

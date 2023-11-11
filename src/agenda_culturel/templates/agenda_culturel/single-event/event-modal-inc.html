@@ -1,0 +1,44 @@
+{% load static %}
+{% load cat_extra %}
+{% load utils_extra %}
+{% load event_extra %}
+{% load tag_extra %}
+
+<article>
+    <header>
+        <a href="#event-{{ event.id }}" 
+            aria-label="Fermer" 
+            class="close" 
+            data-target="event-{{ event.id }}"
+            onClick="toggleModal(event)"></a>
+            <h3>{{ event.category | small_cat }} {{ event|picto_status }} {{ event.title }}</h3>
+        
+            <p>
+                {% picto_from_name "map-pin" %}
+                {{ event.location }}
+            </p>
+            <p>
+                {% picto_from_name "calendar" %}
+                {% if event.end_day %}du{% else %}le{% endif %}
+                {% include "agenda_culturel/date-times-inc.html" with event=event %}
+            </p>
+    </header>
+
+    <p>{{ event.description |truncatewords:20 }}</p>
+
+
+    <p>
+        {% for tag in event.tags %}
+        {{ tag | tag_button }}
+        {% endfor %}
+    </p>
+
+    <footer class="infos-and-buttons">
+        <div class="buttons">
+            <a href="{{ event.get_absolute_url }}" role="button">Voir l'événement <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
+            </svg></a>
+        </div>
+    </footer>
+</article>
+

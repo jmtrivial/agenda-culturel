@@ -42,14 +42,13 @@
     <header>
         <div class="navigation">
             <div>
-            <a role="button" href="{% url 'week_view' calendar.previous_week.year calendar.previous_week|week %}?{{ filter.get_url }}"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="{% static 'images/feather-sprite.svg' %}#chevron-left" />
-            </svg> précédente</a>
+            <a role="button" href="{% url 'week_view' calendar.previous_week.year calendar.previous_week|week %}?{{ filter.get_url }}">
+                {% picto_from_name "chevron-left" %} précédente</a>
             </div>
             <div class="right">
-            <a role="button" href="{% url 'week_view' calendar.next_week.year calendar.next_week|week %}?{{ filter.get_url }}">suivante <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
-            </svg></a>
+            <a role="button" href="{% url 'week_view' calendar.next_week.year calendar.next_week|week %}?{{ filter.get_url }}">suivante 
+                {% picto_from_name "chevron-right" %}
+            </a>
             </div>
         </div>
     </header>

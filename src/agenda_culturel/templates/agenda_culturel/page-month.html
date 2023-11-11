@@ -33,14 +33,13 @@
     <header>
         <div class="navigation">
             <div>
-            <a role="button" href="{% url 'month_view' calendar.previous_month.year calendar.previous_month.month %}?{{ filter.get_url }}"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="{% static 'images/feather-sprite.svg' %}#chevron-left" />
-            </svg> précédent</a>
+            <a role="button" href="{% url 'month_view' calendar.previous_month.year calendar.previous_month.month %}?{{ filter.get_url }}">
+                {% picto_from_name "chevron-left" %} précédent</a>
             </div>
             <div class="right">
-            <a role="button" href="{% url 'month_view' calendar.next_month.year calendar.next_month.month %}?{{ filter.get_url }}">suivant <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
-            </svg></a>
+            <a role="button" href="{% url 'month_view' calendar.next_month.year calendar.next_month.month %}?{{ filter.get_url }}">suivant 
+                {% picto_from_name "chevron-right" %}
+            </a>
             </div>
         </div>
     </header>

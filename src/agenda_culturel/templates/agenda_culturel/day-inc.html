@@ -57,7 +57,7 @@
             {% endif %}
             {{ event|picto_status }} <a href="{{ daytag }}" data-target="event-{{ event.id }}" onClick="toggleModal(event)">{{ event.title }}</a>
             <dialog id="event-{{ event.id }}">
-                {% include "agenda_culturel/event-inc.html" with event=event display="modal" close_button=1 filter=filter %}
+                {% include "agenda_culturel/single-event/event-modal-inc.html" with event=event filter=filter %}
             </dialog>
         </li>
         {% endfor %}

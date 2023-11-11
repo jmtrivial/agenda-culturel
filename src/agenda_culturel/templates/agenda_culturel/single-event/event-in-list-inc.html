@@ -1,0 +1,71 @@
+{% load static %}
+{% load cat_extra %}
+{% load utils_extra %}
+{% load event_extra %}
+{% load tag_extra %}
+
+<article>
+    {% include "agenda_culturel/ephemeris-inc.html" with event=event filter=filter %}
+
+    {{ event.category | small_cat }}
+    {% if event.location %}<hgroup>{% endif %}
+            <h2>
+            {{ event|picto_status }}    
+            <a href="{{ event.get_absolute_url }}">{{ event.title }}</a>
+        </h2>
+    {% if event.location %}
+    <h3>
+        {% picto_from_name "map-pin" %}
+
+        {{ event.location }}
+    </h3>
+    </hgroup>
+    {% endif %}
+        {% if event|need_complete_display:false %}<p>
+            {% picto_from_name "calendar" %}
+    
+            <em>{% if event.end_day %}Cet événement dure du {% else %}Cet événement a lieu le{% endif %}
+                {% include "agenda_culturel/date-times-inc.html" with event=event %}
+            </em></p>
+        {% endif %}
+
+    {% if event.image  %}
+    <article class='illustration{% if display in "in list by day" %}-small{% endif %}'>
+        <img src="{{ event.image }}" alt="{{ event.image_alt }}" />
+    </article>
+    {% endif %}
+
+    <p>{{ event.description |truncatewords:20 }}</p>
+
+    
+    <footer class="infos-and-buttons">
+        <div class="infos">
+            <p>
+                {% for tag in event.tags %}
+                <a href="{% url 'view_tag' tag %}" role="button" class="small-cat">{{ tag }}</a>
+                {% endfor %}
+            </p>
+
+        {% if event.reference_urls %}
+            <p>Source{{ event.reference_urls|pluralize }}&nbsp;:
+            {% for eurl in event.reference_urls %}
+            <a href="{{ eurl }}">{{ eurl|hostname }}</a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            </p>
+        {% else %}
+            <p><em>Cet événement est disponible uniquement sur les nuits énimagmatiques.</em></p>
+        {% endif %}
+        </div>
+        {% if user.is_authenticated %}
+        <div class="buttons">
+            <a href="{% url 'edit_event' event.id %}" role="button">éditer</a>
+            <a href="{% url 'delete_event' event.id %}" role="button">supprimer</a>
+            <a href="{{ event.get_absolute_url }}" role="button">Voir l'événement <svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <use href="{% static 'images/feather-sprite.svg' %}#chevron-right" />
+            </svg></a>
+        </div>
+        {% endif %}
+        </footer>
+    {% endif %}
+</article>
+

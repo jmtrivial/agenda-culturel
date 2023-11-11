@@ -22,8 +22,8 @@ def can_show_start_time(event):
 
 
 @register.filter
-def need_complete_display(event, display):
-    return event.end_day and event.end_day != event.start_day and (event.start_time or event.end_time or display == "in list by day")
+def need_complete_display(event, display_full):
+    return event.end_day and event.end_day != event.start_day and (event.start_time or event.end_time or display_full)
 
 
 @register.filter
