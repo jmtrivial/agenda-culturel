@@ -12,7 +12,7 @@
 
 {% block content %}
 
-<h1>Édition du contenu statique {{ object.name }}</h1>
+<h1>Édition du contenu statique <em>{{ object.name }}</em></h1>
 
 <form method="post">{% csrf_token %}
     {{ form.as_p }}

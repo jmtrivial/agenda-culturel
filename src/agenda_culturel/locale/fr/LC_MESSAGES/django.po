@@ -212,3 +212,9 @@ msgstr "Ajouter une autre"
 
 msgid "Search"
 msgstr "Rechercher"
+
+msgid "Text as shown to the visitors"
+msgstr "Text tel que présenté aux visiteureuses"
+
+msgid "Content"
+msgstr "Contenu"

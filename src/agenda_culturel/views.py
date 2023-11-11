@@ -229,6 +229,11 @@ class EventFilter(django_filters.FilterSet):
         return len(self.form.cleaned_data["category"]) != 0 or len(self.form.cleaned_data["tags"]) != 0
 
 
+def mentions_legales(request):
+
+    context = { "title": "Mentions légales", "static_content": "mentions_legales", "url_path": reverse_lazy("mentions_legales") }
+    return render(request, 'agenda_culturel/page-single.html', context)
+
 def home(request):
     return week_view(request, home=True)
 

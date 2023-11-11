@@ -1,0 +1,29 @@
+{% extends "agenda_culturel/page.html" %}
+
+
+
+{% load i18n %}
+
+{% load static %}
+
+{% load static_content_extra %}
+
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+
+ {% block content %}
+
+ <article>
+    <header>
+        <h1>{{ title }}</h1>
+    </header>
+    {% include "agenda_culturel/static_content.html" with name=static_content url_path=url_path %}
+    </article>
+    
+ 
+ 
+
+ {% endblock %}
