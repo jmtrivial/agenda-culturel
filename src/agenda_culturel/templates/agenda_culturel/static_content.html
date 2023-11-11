@@ -3,12 +3,12 @@
 {% get_static_content_by_name name as content %}
 {% if content %}
     {% if user.is_authenticated %}
-    <a href="{% url 'edit_static_content' content.pk %}" role="button" class="slide-buttons">Éditer</a>
+    <a href="{% url 'edit_static_content' content.pk %}" role="button" class="slide-buttons">Éditer le texte</a>
     {% endif %}
     {{ content.text|safe }}
 {% else %}
     {% if user.is_authenticated %}
-    <a href="{% url 'create_static_content' %}?name={{ name }}&url_path={{ url_path }}" role="button" class="slide-buttons">Créer</a>
+    <a href="{% url 'create_static_content' %}?name={{ name }}&url_path={{ url_path }}" role="button" class="slide-buttons">Créer le texte</a>
     <p><em>Le contenu statique <strong>{{ name }}</strong> n'a pas encore été défini.</em></p>
 {% endif %}
 {% endif %}
