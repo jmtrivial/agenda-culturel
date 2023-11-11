@@ -64,16 +64,24 @@ class CalendarDay:
     def is_today(self):
         return self.today
 
+    def is_event_finishing_early_in_this_day(self, event):
+        if event.end_day is None or event.end_time is None:
+            return False
+        if event.start_day == event.end_day:
+            return False
+        return event.end_day == self.date and event.end_time < time(4)
+
     def add_event(self, event):
-        self.events.append(event)
-        if event.category is None:
-            if not "" in self.events_by_category:
-                self.events_by_category[""] = []
-            self.events_by_category[""].append(event)
-        else:
-            if not event.category.name in self.events_by_category:
-                self.events_by_category[event.category.name] = []
-            self.events_by_category[event.category.name].append(event)
+        if not self.is_event_finishing_early_in_this_day(event):
+            self.events.append(event)
+            if event.category is None:
+                if not "" in self.events_by_category:
+                    self.events_by_category[""] = []
+                self.events_by_category[""].append(event)
+            else:
+                if not event.category.name in self.events_by_category:
+                    self.events_by_category[event.category.name] = []
+                self.events_by_category[event.category.name].append(event)
 
     def filter_events(self):
         self.events.sort(key=lambda e: CalendarDay.midnight if e.start_time is None else e.start_time)
