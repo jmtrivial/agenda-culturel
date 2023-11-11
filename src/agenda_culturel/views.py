@@ -69,7 +69,7 @@ class CalendarDay:
             return False
         if event.start_day == event.end_day:
             return False
-        return event.end_day == self.date and event.end_time < time(4)
+        return event.end_day == self.date and event.end_time < time(8)
 
     def add_event(self, event):
         if not self.is_event_finishing_early_in_this_day(event):
