@@ -1,57 +1,64 @@
 {% extends "agenda_culturel/page.html" %}
 
-{% block title %}Rechercher un évnement{% endblock %}
+{% block title %}Rechercher un événement{% endblock %}
 
+{% load utils_extra %}
 
 {% block content %}
 
-
-<article>
+<article class="search">
     <header>
         <h1>Rechercher un événement</h1>
     </header>
-    
 
-    <form method="get" class="form django-form">
-        {% for field in filter.form %}
-        <div>
-            {{ field.errors }}
-            {{ field.label_tag }} {{ field }}
-        </div>
-        {% if forloop.first %}
-        <details>
-            <summary>Rechercher avancée</summary>
-        {% endif %}
-        {% if forloop.last %}
-        </details>
-        {% endif %}
-    {% endfor %}
+    <form method="get" class="form django-form" action="#results">
+        {{ filter.form }}
+        <button type="submit">Rechercher</button>
 
-    <button type="submit">Rechercher</button>
+        {% if full %}
+        <a href="{% url 'event_search' %}">Recherche simplifiée {% picto_from_name "chevron-right" %}</a>
+        {% else %}
+        <a href="{% url 'event_search_full' %}">Recherche avancée  {% picto_from_name "chevron-right" %}</a>
+        {% endif %}
     </form>
 
-    <ul>
-{% for obj in paginator_filter %}
-    <li><a href="{{ obj.get_absolute_url }}">{{ obj }}</a></li>
-{% endfor %}
-</ul>
-<footer>
-    <span>
-        {% if paginator_filter.has_previous %}
-            <a href="?page=1" role="button">&laquo; premier</a>
-            <a href="?page={{ paginator_filter.previous_page_number }}" role="button">précédent</a>
-        {% endif %}
+    {% if has_results %}
+    <div id="results">
+        <p>{{ paginator_filter.paginator.count }} événement{{paginator_filter.object_list.count | pluralize }} correspond{{paginator_filter.object_list.count | pluralize:"ent" }} à la recherche.</p>
+        <ul>
+        {% for obj in paginator_filter %}
+            <li><p>{% include "agenda_culturel/date-times-inc.html" with event=obj %}
+                &nbsp;: <a href="{{ obj.get_absolute_url }}">
+                    {% if obj.title_hl %}{{ obj.title_hl | safe }}{% else %}{{ obj.title }}{% endif %}</a></p>
+                <p class="location-search">{% picto_from_name "map-pin" %}
+                {% if obj.location_hl %}{{ obj.location_hl | safe }}{% else %}{{ obj.location }}{% endif %}</p>
+                <div class="description">
+                    {% if obj.description_hl %}{{ obj.description_hl | safe }}{% else %}{{ obj.description }}{% endif %}
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+        {% if paginator_filter.paginator.num_pages != 1 %}
+            <footer>
+                <span>
+                    {% if paginator_filter.has_previous %}
+                        <a href="?page=1" role="button">&laquo; premier</a>
+                        <a href="?page={{ paginator_filter.previous_page_number }}" role="button">précédent</a>
+                    {% endif %}
 
-        <span>
-            Page {{ paginator_filter.number }} sur {{ paginator_filter.paginator.num_pages }}
-        </span>
+                    <span>
+                        Page {{ paginator_filter.number }} sur {{ paginator_filter.paginator.num_pages }}
+                    </span>
 
-        {% if paginator_filter.has_next %}
-            <a href="?page={{ paginator_filter.next_page_number }}" role="button">suivant</a>
-            <a href="?page={{ paginator_filter.paginator.num_pages }}" role="button">dernier &raquo;</a>
+                    {% if paginator_filter.has_next %}
+                        <a href="?page={{ paginator_filter.next_page_number }}" role="button">suivant</a>
+                        <a href="?page={{ paginator_filter.paginator.num_pages }}" role="button">dernier &raquo;</a>
+                    {% endif %}
+                </span>
+            </footer>
         {% endif %}
-    </span>
-</footer>
+    </div>
+    {% endif %}
 </article>
 
 {% endblock %}

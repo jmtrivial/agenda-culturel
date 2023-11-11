@@ -298,9 +298,9 @@ article#filters {
     }
 }
 
-.helptext {
+.helptext, .location-search {
     font-size: 80%;
-    opacity: 0.7;
+    margin-top: -0.7em;
 }
 
 .django-ckeditor-widget {
@@ -316,4 +316,16 @@ article#filters {
 
 .slide-buttons {
     float: right;
+}
+
+.highlight {
+    color: var(--primary);
+    font-weight: bold;
+    font-style: italic;
+}
+
+.search .description {
+    margin-left: 1em;
+    font-size: 90%;
+    margin-top: -0.5em;
 }

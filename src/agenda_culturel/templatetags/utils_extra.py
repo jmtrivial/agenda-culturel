@@ -59,6 +59,10 @@ def url_day(d):
 
 @register.simple_tag
 def picto_from_name(name, datatooltip=""):
-    return mark_safe('<span data-tooltip="' + datatooltip + '"><svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + \
+    result = '<svg width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + \
         '<use href="' + static("images/feather-sprite.svg") + '#' + name + '" />' + \
-        '</svg></span>')
+        '</svg>'
+    if datatooltip != "":
+        result = '<span data-tooltip="' + datatooltip + '">' + result + '</span>'
+
+    return mark_safe(result)

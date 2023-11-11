@@ -4,6 +4,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import QueryDict
 from django import forms
+from django.contrib.postgres.search import SearchQuery, SearchHeadline
+
 
 from .forms import EventSubmissionModelForm
 from .celery import create_event_from_submission
@@ -403,15 +405,33 @@ def event_list(request):
     return render(request, 'agenda_culturel/list.html', {'filter': filter, 'paginator_filter': response})
 
 
+class SimpleSearchEventFilter(django_filters.FilterSet):
+    q = django_filters.CharFilter(method='custom_filter', label=_("Search"))
+
+    def custom_filter(self, queryset, name, value):
+        search_query = SearchQuery(value, config='french')
+        qs = queryset.filter(
+            Q(title__contains=value) | Q(location__contains=value) | Q(description__contains=value))
+        for f in ["title", "location", "description"]:
+            params = { f + "_hl": SearchHeadline(f,
+                search_query,
+                start_sel="<span class=\"highlight\">",
+                stop_sel="</span>",
+                config='french')}
+            qs = qs.annotate(**params)
+        return qs
+
+    class Meta:
+        model = Event
+        fields = ['q']
+
 
 class SearchEventFilter(django_filters.FilterSet):
     tags = django_filters.CharFilter(lookup_expr='icontains')
-    title = django_filters.CharFilter(lookup_expr='contains')
-    location = django_filters.CharFilter(lookup_expr='contains')
-    description = django_filters.CharFilter(lookup_expr='contains')
+    title = django_filters.CharFilter(method="hl_filter_contains")
+    location = django_filters.CharFilter(method="hl_filter_contains")
+    description = django_filters.CharFilter(method="hl_filter_contains")
     start_day = django_filters.DateFromToRangeFilter(widget=django_filters.widgets.RangeWidget(attrs={'type': 'date'}))
-
-    q = django_filters.CharFilter(method='custom_filter', label=_("Search"))
 
     o = django_filters.OrderingFilter(
         # tuple-mapping retains order
@@ -422,18 +442,36 @@ class SearchEventFilter(django_filters.FilterSet):
         ),
     )
 
-    def custom_filter(self, queryset, name, value):
-        return queryset.filter(
-            Q(title__contains=value) | Q(location__contains=value) | Q(description__contains=value))
+    def hl_filter_contains(self, queryset, name, value):
+
+        # first check if it contains
+        filter_contains = { name + "__contains": value }
+        queryset = queryset.filter(**filter_contains)
+
+        # then hightlight the result
+        search_query = SearchQuery(value, config='french')
+        params = { name + "_hl": SearchHeadline(name,
+                search_query,
+                start_sel="<span class=\"highlight\">",
+                stop_sel="</span>",
+                config='french')}
+        return queryset.annotate(**params)
 
 
     class Meta:
         model = Event
-        fields = ['q', 'title', 'location', 'description', 'category', 'tags', 'start_day']
+        fields = ['title', 'location', 'description', 'category', 'tags', 'start_day']
 
 
-def event_search(request):
-    filter = SearchEventFilter(request.GET, queryset=get_event_qs(request).order_by("-start_day"))
+
+def event_search(request, full=False):
+
+    if full:
+        filter = SearchEventFilter(request.GET, queryset=get_event_qs(request).order_by("-start_day"))
+    else:
+        filter = SimpleSearchEventFilter(request.GET, queryset=get_event_qs(request).order_by("-start_day"))
+
+
     paginator = Paginator(filter.qs, 10)
     page = request.GET.get('page')
 
@@ -444,4 +482,10 @@ def event_search(request):
     except EmptyPage:
         response = paginator.page(paginator.num_pages)
 
-    return render(request, 'agenda_culturel/search.html', {'filter': filter, 'paginator_filter': response})
+    return render(request, 'agenda_culturel/search.html', {'filter': filter, 
+        'has_results': len(request.GET) != 0 or (len(request.GET) > 1 and "page" in request.GET),
+        'paginator_filter': response, 
+        'full': full})
+
+def event_search_full(request):
+    return event_search(request, True)
