@@ -4,6 +4,11 @@
 
 {% load utils_extra %}
 
+{% load cat_extra %}
+{% block entete_header %}
+    {% css_categories %}
+{% endblock %}
+
 {% block content %}
 
 <article class="search">
@@ -27,14 +32,8 @@
         <p>{{ paginator_filter.paginator.count }} événement{{paginator_filter.object_list.count | pluralize }} correspond{{paginator_filter.object_list.count | pluralize:"ent" }} à la recherche.</p>
         <ul>
         {% for obj in paginator_filter %}
-            <li><p>{% include "agenda_culturel/date-times-inc.html" with event=obj %}
-                &nbsp;: <a href="{{ obj.get_absolute_url }}">
-                    {% if obj.title_hl %}{{ obj.title_hl | safe }}{% else %}{{ obj.title }}{% endif %}</a></p>
-                <p class="location-search">{% picto_from_name "map-pin" %}
-                {% if obj.location_hl %}{{ obj.location_hl | safe }}{% else %}{{ obj.location }}{% endif %}</p>
-                <div class="description">
-                    {% if obj.description_hl %}{{ obj.description_hl | safe }}{% else %}{{ obj.description }}{% endif %}
-                </div>
+            <li>
+                {% include "agenda_culturel/single-event/event-in-flat-list-inc.html" with event=obj %}
             </li>
         {% endfor %}
         </ul>

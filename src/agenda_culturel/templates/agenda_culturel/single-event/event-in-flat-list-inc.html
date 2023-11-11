@@ -1,0 +1,21 @@
+{% load utils_extra %}
+{% load cat_extra %}
+
+<p>{{ event.category | small_cat }} 
+     <a href="{{ event.get_absolute_url }}">
+        {% if event.title_hl %}{{ event.title_hl | safe }}{% else %}{{ event.title }}{% endif %}</a></p>
+    <p class="subentry-search">{% picto_from_name "calendar" %}
+        {% if event.end_day %}du{% else %}le{% endif %}
+        {% include "agenda_culturel/date-times-inc.html" with event=event %}
+        {% picto_from_name "map-pin" %}
+    {% if event.location_hl %}{{ event.location_hl | safe }}{% else %}{{ event.location }}{% endif %}</p>
+    <p class="subentry-search">
+        {% picto_from_name "tag" %}
+        {% for tag in event.tags %}
+        <a href="{% url 'view_tag' tag %}">{{ tag }}</a>
+        {% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    <div class="description">
+        {% if event.description_hl %}{{ event.description_hl | safe }}{% else %}{{ event.description }}{% endif %}
+    </div>
