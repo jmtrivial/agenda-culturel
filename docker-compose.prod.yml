@@ -59,6 +59,8 @@ services:
     volumes:
       - ./src:/usr/src/app/
       - ./deployment/scripts:/app/deployment/scripts/
+      - static_files:/usr/src/app/static
+      - media_files:/usr/src/app/media
     env_file: .env
     depends_on:
       - db

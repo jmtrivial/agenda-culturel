@@ -218,3 +218,9 @@ msgstr "Text tel que présenté aux visiteureuses"
 
 msgid "Content"
 msgstr "Contenu"
+
+msgid "Illustration (local image)"
+msgstr "Illustration (image locale)"
+
+msgid "Illustration image stored in the agenda server"
+msgstr "Image d'illustration stockée sur le serveur de l'agenda"

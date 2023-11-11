@@ -35,11 +35,11 @@
             </em></p>
         {% endif %}
 
-    {% if event.image %}
-    <article class='illustration-small'>
-        <img src="{{ event.image }}" alt="{{ event.image_alt }}" />
-    </article>
-    {% endif %}
+        {% if event.image or event.local_image %}
+        <article class='illustration-small'>
+            <img src="{% if event.local_image %}{{ event.local_image.url }}{% else %}{{ event.image }}{% endif %}" alt="{{ event.image_alt }}" />
+        </article>
+        {% endif %}
 
     <p>{{ event.description |truncatewords:20 |linebreaks }}</p>
 

@@ -107,6 +107,8 @@ class Event(models.Model):
 
     description = models.TextField(verbose_name=_('Description'), help_text=_('General description of the event'), blank=True, null=True)
 
+    local_image = models.ImageField(verbose_name=_('Illustration (local image)'), help_text=_("Illustration image stored in the agenda server"), max_length=1024, blank=True, null=True)
+
     image = models.URLField(verbose_name=_('Illustration'), help_text=_("URL of the illustration image"), max_length=1024, blank=True, null=True)
     image_alt = models.CharField(verbose_name=_('Illustration description'), help_text=_('Alternative text used by screen readers for the image'), blank=True, null=True, max_length=1024)
 
@@ -143,6 +145,7 @@ class Event(models.Model):
 
     def is_trash(self):
         return self.status == Event.STATUS.TRASH
+
 
 
 class EventSubmissionForm(models.Model):

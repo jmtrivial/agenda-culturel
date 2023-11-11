@@ -1,9 +1,16 @@
 from abc import ABC, abstractmethod
 
+from django.db import models
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+
+import urllib.request
+from django.core.files.uploadedfile import SimpleUploadedFile
+from tempfile import NamedTemporaryFile
+from urllib.parse import urlparse
+import os
 
 from bs4 import BeautifulSoup
 
@@ -39,6 +46,26 @@ class Extractor:
         except Exception as e:
             logger.error(e)
             return None
+
+
+    def guess_filename(url):
+        a = urlparse(url)
+        return os.path.basename(a.path)
+
+    def download_media(url):
+        # first download file
+        
+        basename = Extractor.guess_filename(url)
+        try:
+            tmpfile, _ = urllib.request.urlretrieve(url)
+        except:
+            return None
+
+        # if the download is ok, then create create the corresponding file object
+        return SimpleUploadedFile(basename, open(tmpfile, "rb").read())
+
+
+
 
 class ExtractorFacebook(Extractor):
 
@@ -164,6 +191,10 @@ class ExtractorFacebook(Extractor):
         def build_event(self, url):
             from .models import Event
 
+            image = self.get_element("image")
+            local_image = None if image is None else Extractor.download_media(image)
+
+
             return Event(title=self.get_element("name"), 
                 status=Event.STATUS.DRAFT,
                 start_day=self.get_element_datetime("start_timestamp"),
@@ -172,6 +203,7 @@ class ExtractorFacebook(Extractor):
                 end_time=self.get_element_datetime("end_timestamp"),
                 location=self.get_element("event_place_name"),
                 description=self.get_element("description"),
+                local_image=local_image,
                 image=self.get_element("image"),
                 image_alt=self.get_element("image_alt"),
                 reference_urls=[url])
