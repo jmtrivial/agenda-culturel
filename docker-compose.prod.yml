@@ -1,4 +1,5 @@
-version: '3.9'
+version: '3.7'
+
 
 services:
   backend:
@@ -24,8 +25,7 @@ services:
     expose:
       - "${APP_PORT:-8000}"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     command: [ "/bin/sh", "/app/deployment/scripts/backend/start.sh" ]
 
   db:
