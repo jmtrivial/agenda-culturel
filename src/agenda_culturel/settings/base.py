@@ -177,3 +177,13 @@ CELERY_RESULT_BACKEND = REDIS_URL
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
 )
+
+
+# EMAIL settings
+
+if os_getenv("EMAIL_BACKEND"):
+    EMAIL_BACKEND = os_getenv("EMAIL_BACKEND")
+    EMAIL_HOST = os_getenv("EMAIL_HOST")
+    EMAIL_PORT = os_getenv("EMAIL_PORT")
+    EMAIL_HOST_USER = os_getenv("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os_getenv("EMAIL_HOST_PASSWORD")
