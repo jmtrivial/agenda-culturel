@@ -50,6 +50,10 @@ migrate:
 	docker exec -it $(BACKEND_APP_NAME) $(SHELL) "-c" \
 	"python manage.py migrate"
 
+create-categories:
+	docker exec -it $(BACKEND_APP_NAME) $(SHELL) "-c" \
+	"python3 manage.py runscript create_categories"
+
 build-dev:
 	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f docker-compose.yml up --build -d
 
