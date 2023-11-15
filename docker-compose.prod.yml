@@ -20,7 +20,7 @@ services:
       - "${APP_PORT:-8000}"
     depends_on:
       - db
-    command: [ "/bin/sh", "/app/deployment/scripts/wait-db.sh", "/app/deployment/scripts/backend/start.sh" ]
+    command: [ "/bin/bash", "/app/deployment/scripts/wait-db.sh", "/app/deployment/scripts/backend/start.sh" ]
 
   db:
     image: postgres:15.2-alpine
@@ -60,12 +60,12 @@ services:
       - db
       - redis
       - backend
-    command: [ "/bin/sh", "/app/deployment/scripts/wait-db.sh", "/app/deployment/scripts/celery/start-worker.sh" ]
+    command: [ "/bin/bash", "/app/deployment/scripts/wait-db.sh", "/app/deployment/scripts/celery/start-worker.sh" ]
 
   celery-beat:
     <<: *celery-worker
     container_name: "${APP_NAME}-celery-beat"
-    command: [ "/bin/sh", "/app/deployment/scripts/wait-db.sh", "/app/deployment/scripts/celery/start-beat.sh" ]
+    command: [ "/bin/bash", "/app/deployment/scripts/wait-db.sh", "/app/deployment/scripts/celery/start-beat.sh" ]
 
   nginx:
     image: nginx:latest

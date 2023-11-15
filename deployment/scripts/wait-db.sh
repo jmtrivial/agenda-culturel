@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 wait_for_it=$(dirname "$0")/wait-for-it.sh
 

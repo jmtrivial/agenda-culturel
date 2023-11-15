@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Run migrations, collect static files and start server
 if [ "$APP_ENV" != "prod" ]; then
     python manage.py makemigrations --noinput

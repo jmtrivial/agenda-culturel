@@ -130,7 +130,10 @@ class Event(models.Model):
         verbose_name_plural = _('Events')
 
     def get_all_tags():
-        tags = list(Event.objects.values_list('tags', flat = True))
+        try:
+            tags = list(Event.objects.values_list('tags', flat = True))
+        except:
+            tags = []
         uniq_tags = set()
         for t in tags:
             if t is not None:
