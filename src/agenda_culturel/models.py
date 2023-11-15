@@ -1,7 +1,7 @@
 from django.db import models
 from django_better_admin_arrayfield.models.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
-from django.template.defaultfilters import slugify  # new
+from django.template.defaultfilters import slugify
 from django.urls import reverse
 from colorfield.fields import ColorField
 from ckeditor.fields import RichTextField
@@ -124,7 +124,7 @@ class Event(models.Model):
         return not self.end_day or self.end_day == self.start_day
 
     def get_absolute_url(self):
-        return reverse("view_event", kwargs={"pk": self.pk, "extra": self.title})
+        return reverse("view_event", kwargs={"pk": self.pk, "extra": slugify(self.title)})
 
     def __str__(self):
         return _date(self.start_day) + ": " + self.title
