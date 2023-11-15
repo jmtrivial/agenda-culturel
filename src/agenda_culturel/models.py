@@ -64,11 +64,15 @@ class Category(models.Model):
 
 
     def get_default_category_id():
-        default, created = Category.objects.get_or_create(name=Category.default_name,
-            alt_name=Category.default_alt_name,
-            codename=Category.default_codename,
-            color=Category.default_color)
-        return default.id
+        try:
+            default, created = Category.objects.get_or_create(name=Category.default_name,
+                alt_name=Category.default_alt_name,
+                codename=Category.default_codename,
+                color=Category.default_color)
+
+            return default.id
+        except:
+            return None
 
     def css_class(self):
         return "cat-" + str(self.id)
@@ -95,7 +99,7 @@ class Event(models.Model):
 
     status = models.CharField(_("Status"), max_length=20, choices=STATUS.choices, default=STATUS.PUBLISHED)
 
-    category = models.ForeignKey(Category, verbose_name=_('Category'), help_text=_('Category of the event'), default=Category.get_default_category_id(), on_delete=models.SET_DEFAULT)
+    category = models.ForeignKey(Category, verbose_name=_('Category'), help_text=_('Category of the event'), null=True, default=Category.get_default_category_id(), on_delete=models.SET_DEFAULT)
 
     start_day = models.DateField(verbose_name=_('Day of the event'), help_text=_('Day of the event'))
     start_time = models.TimeField(verbose_name=_('Starting time'), help_text=_('Starting time'), blank=True, null=True)
