@@ -187,4 +187,5 @@ if os_getenv("EMAIL_BACKEND"):
     EMAIL_PORT = os_getenv("EMAIL_PORT")
     EMAIL_HOST_USER = os_getenv("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = os_getenv("EMAIL_HOST_PASSWORD")
-    EMAIL_USE_TLS = os_getenv("EMAIL_USE_TLS")
+    EMAIL_USE_TLS = os_getenv("EMAIL_USE_TLS", False)
+    EMAIL_USE_SSL = os_getenv("EMAIL_USE_SSL", False)
