@@ -59,6 +59,9 @@ build-dev-log:
 build-prod:
 	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f docker-compose.prod.yml up --build -d
 
+build-prod-log:
+	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f docker-compose.prod.yml up --build
+
 stop-dev:
 	@docker-compose -f docker-compose.yml down
 
