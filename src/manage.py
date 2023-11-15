@@ -16,7 +16,6 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    print("commande: " + str(sys.argv))
     execute_from_command_line(sys.argv)
 
 
