@@ -160,7 +160,7 @@ REDIS_DB_KEYS = {
     "prod": 2,
 }
 
-# Redis settings
+# Redis settingsEMAIL_USE_TLS
 
 REDIS_HOST = os_getenv("REDIS_HOST", "redis")
 REDIS_PORT = os_getenv("REDIS_PORT", 6379)
@@ -187,3 +187,4 @@ if os_getenv("EMAIL_BACKEND"):
     EMAIL_PORT = os_getenv("EMAIL_PORT")
     EMAIL_HOST_USER = os_getenv("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = os_getenv("EMAIL_HOST_PASSWORD")
+    EMAIL_USE_TLS = os_getenv("EMAIL_USE_TLS")
