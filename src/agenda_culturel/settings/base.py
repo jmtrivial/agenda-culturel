@@ -17,6 +17,9 @@ ALLOWED_HOSTS = os_getenv("ALLOWED_HOSTS", "localhost").split(",")
 
 
 if DEBUG:
+    CSRF_TRUSTED_ORIGINS = os_getenv("CSRF_TRUSTED_ORIGINS", "http://localhost").split(
+            ","
+    )
     CORS_ORIGIN_ALLOW_ALL = True
 else:
     CSRF_TRUSTED_ORIGINS = os_getenv("CSRF_TRUSTED_ORIGINS", "http://localhost").split(
